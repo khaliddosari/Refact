@@ -3,7 +3,9 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "react-router"
 
 import { CityChip, PartyArrow, TripFlags } from "@/components/data-display"
-import { TrackingMap } from "@/components/maps/tracking-map"
+import { GoogleMapsLink } from "@/components/maps/google-link"
+import { MapsProvider } from "@/components/maps/maps-provider"
+import { TrackingMap, longestStop, trackRequest } from "@/components/maps/tracking-map"
 import { PageHeader } from "@/components/page-header"
 import { StatusPill } from "@/components/status-pill"
 import { Button } from "@/components/ui/button"
@@ -11,30 +13,15 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Slider } from "@/components/ui/slider"
 import { COMP, gpsFor, siteById, tripOrigin, tripsByRisk } from "@/data"
 import type { GpsPoint, Trip } from "@/data/types"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import { useRoadRoutes } from "@/hooks/use-road-routes"
 import { useScrollFade } from "@/hooks/use-scroll-fade"
 import { fmt, fmtInt, hhmm } from "@/lib/format"
-import { NAV_ITEMS } from "@/lib/nav"
+import { PAGES } from "@/lib/nav"
+import { positionOnTrack, type LatLng } from "@/lib/roads"
 import { cn } from "@/lib/utils"
 
 const minutesOf = (ts: string) => Date.parse(ts.replace(" ", "T")) / 60000
-
-/** Position on the track at a minute offset, interpolated between GPS fixes. */
-function positionAt(track: GpsPoint[], minute: number) {
-  const t = minutesOf(track[0].time) + minute
-  for (let i = 0; i < track.length - 1; i++) {
-    const a = track[i]
-    const b = track[i + 1]
-    const ta = minutesOf(a.time)
-    const tb = minutesOf(b.time)
-    if (t >= ta && t <= tb) {
-      const k = tb === ta ? 0 : (t - ta) / (tb - ta)
-      const still = a.lat === b.lat && a.lon === b.lon
-      return { lat: a.lat + (b.lat - a.lat) * k, lon: a.lon + (b.lon - a.lon) * k, speed: still ? 0 : a.speed, still }
-    }
-  }
-  const last = track[track.length - 1]
-  return { lat: last.lat, lon: last.lon, speed: last.speed, still: false }
-}
 
 function clock(track: GpsPoint[], minute: number) {
   const d = new Date((minutesOf(track[0].time) + minute) * 60000)
@@ -46,13 +33,46 @@ function destination(t: Trip) {
 }
 
 export default function TrackingPage() {
-  const item = NAV_ITEMS[5]
+  return (
+    <MapsProvider>
+      <TrackingScreen />
+    </MapsProvider>
+  )
+}
+
+function TrackingScreen() {
+  const item = PAGES.tracking
   const [params, setParams] = useSearchParams()
   const requested = params.get("trip")
   const selected = COMP.trips.find((t) => t.id === requested) ?? COMP.trips.find((t) => t.id === COMP.gpsTrip)!
   const select = (id: string) => setParams({ trip: id }, { replace: true })
 
+  // The recorded track, snapped to the roads: the map draws it, and playback
+  // moves the vehicle along it instead of cutting corners between fixes.
   const track = useMemo(() => gpsFor(selected), [selected])
+  const requests = useMemo(() => {
+    const request = trackRequest(selected)
+    return request ? [request] : []
+  }, [selected])
+  const snapped = useRoadRoutes(requests)[`track-${selected.id}`]
+  const wide = useMediaQuery("(min-width: 64rem)")
+
+  // The same trip in Google Maps itself: the recorded track through its longest
+  // stop, or the road from the facility to the site it reported.
+  const home = tripOrigin(selected)
+  const reported = selected.site ? siteById.get(selected.site) : undefined
+  let link: { origin: LatLng; destination: LatLng; via?: LatLng[] } | null = null
+  if (track.length > 1) {
+    const stop = longestStop(track)
+    link = {
+      origin: { lat: track[0].lat, lng: track[0].lon },
+      destination: { lat: track[track.length - 1].lat, lng: track[track.length - 1].lon },
+      via: stop ? [{ lat: stop.fix.lat, lng: stop.fix.lon }] : undefined,
+    }
+  } else if (home && reported) {
+    link = { origin: { lat: home.lat, lng: home.lon }, destination: { lat: reported.lat, lng: reported.lon } }
+  }
+
   const total = track.length > 1 ? minutesOf(track[track.length - 1].time) - minutesOf(track[0].time) : 0
   const [minute, setMinute] = useState(0)
   const [playing, setPlaying] = useState(false)
@@ -79,7 +99,7 @@ export default function TrackingPage() {
     return () => window.clearInterval(id)
   }, [playing, total])
 
-  const at = track.length > 1 ? positionAt(track, minute) : null
+  const at = track.length > 1 ? positionOnTrack(track, minute, snapped) : null
 
   return (
     <>
@@ -132,13 +152,20 @@ export default function TrackingPage() {
         {/* On a phone the details follow the map; from lg they float over it. */}
         <div className="relative flex min-w-0 flex-col gap-4 lg:block lg:min-h-0">
           <div className="relative h-[55dvh] min-h-[20rem] lg:absolute lg:inset-0 lg:h-auto lg:min-h-0">
-            <TrackingMap selectedId={selected.id} onSelect={select} truckAt={at} className="absolute inset-0 size-full rounded-2xl ring-1 ring-(--glass-edge)" />
+            <TrackingMap
+              selectedId={selected.id}
+              onSelect={select}
+              truckAt={at}
+              track={snapped}
+              roomForCard={wide}
+              className="absolute inset-0 size-full rounded-2xl ring-1 ring-(--glass-edge)"
+            />
             <MapLegend />
           </div>
 
           <section
             aria-label={`الرحلة ${selected.id}`}
-            className="flex flex-col gap-3 rounded-2xl bg-popover p-4 shadow-(--popup-shadow) backdrop-blur-xl backdrop-saturate-150 lg:absolute lg:start-3 lg:bottom-3 lg:z-[500] lg:max-h-[60%] lg:w-[23rem] lg:overflow-y-auto"
+            className="flex flex-col gap-3 rounded-2xl bg-popover p-4 shadow-(--popup-shadow) backdrop-blur-xl backdrop-saturate-150 lg:absolute lg:start-3 lg:bottom-3 lg:z-10 lg:max-h-[60%] lg:w-[23rem] lg:overflow-y-auto"
           >
             <div className="flex items-center gap-2">
               <h2 className="text-base font-bold">
@@ -148,6 +175,7 @@ export default function TrackingPage() {
             </div>
             <PartyArrow from={tripOrigin(selected)?.activity ?? selected.record} to={destination(selected)} className="text-sm" />
             <TripFlags trip={selected} />
+            {link && <GoogleMapsLink origin={link.origin} destination={link.destination} via={link.via} className="w-full" />}
 
             {track.length > 1 && at && (
               <div className="rounded-xl bg-card p-3 ring-1 ring-(--glass-edge)">
@@ -258,7 +286,7 @@ function TripChips({ selectedId, onSelect }: { selectedId: string; onSelect: (id
 
 function MapLegend() {
   return (
-    <ul className="pointer-events-none absolute end-3 top-3 z-[500] hidden flex-col gap-1.5 rounded-xl bg-popover p-3 text-xs shadow-(--popup-shadow) backdrop-blur-xl sm:flex">
+    <ul className="pointer-events-none absolute end-3 top-3 z-10 hidden flex-col gap-1.5 rounded-xl bg-popover p-3 text-xs shadow-(--popup-shadow) backdrop-blur-xl sm:flex">
       <li className="flex items-center gap-2">
         <span className="size-3 rounded-full bg-primary/20 ring-1 ring-primary" /> موقع معتمد
       </li>
@@ -266,13 +294,10 @@ function MapLegend() {
         <span className="size-3 rounded-full bg-cream ring-2 ring-primary" /> منشأة
       </li>
       <li className="flex items-center gap-2">
-        <span className="h-1 w-5 rounded-full bg-red-600" /> مسار GPS
+        <span className="h-1 w-5 rounded-full bg-red-600" /> مشبوهة
       </li>
       <li className="flex items-center gap-2">
-        <span className="h-0 w-5 border-t-2 border-dashed border-red-600" /> مشبوهة
-      </li>
-      <li className="flex items-center gap-2">
-        <span className="h-0 w-5 border-t-2 border-dashed border-stone-500" /> سليمة
+        <span className="h-1 w-5 rounded-full bg-stone-400" /> سليمة
       </li>
       <li className="flex items-center gap-2">
         <span className="size-2.5 rotate-45 rounded-[2px] bg-red-800" /> رصد درون

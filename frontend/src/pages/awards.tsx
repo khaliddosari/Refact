@@ -2,6 +2,8 @@ import { Coins, History, Leaf, List, ListChecks, Map as MapIcon, Mountain, Targe
 import { useState } from "react"
 
 import { CityChip, FamilyIcon, MiniStat, PartyArrow } from "@/components/data-display"
+import { GoogleMapsLink } from "@/components/maps/google-link"
+import { MapsProvider } from "@/components/maps/maps-provider"
 import { SymbiosisMap } from "@/components/maps/symbiosis-map"
 import { PageHeader } from "@/components/page-header"
 import { Panel } from "@/components/panel"
@@ -14,6 +16,7 @@ import {
   byproductById,
   excludedOpportunities,
   exclusionDetail,
+  factory,
   feasibleOpportunities,
   materialByCode,
   partyName,
@@ -21,7 +24,7 @@ import {
 import type { Opportunity } from "@/data/types"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { fmt, fmtInt, fmtPct, fmtQty, fmtSar } from "@/lib/format"
-import { NAV_ITEMS } from "@/lib/nav"
+import { PAGES } from "@/lib/nav"
 import { cn } from "@/lib/utils"
 
 const S = SYM.summary
@@ -34,13 +37,21 @@ function history(o: Opportunity) {
 type View = "list" | "map"
 
 export default function AwardsPage() {
-  const item = NAV_ITEMS[2]
+  return (
+    <MapsProvider>
+      <AwardsScreen />
+    </MapsProvider>
+  )
+}
+
+function AwardsScreen() {
+  const item = PAGES.awards
   // Nothing selected at first: the map opens on the whole city.
   const [selected, setSelected] = useState<string | null>(null)
   const toggle = (id: string) => setSelected((current) => (current === id ? null : id))
 
   // Side by side from lg; below that, one view at a time. The map mounts only
-  // when it is visible: Leaflet drawn into a hidden box comes out grey.
+  // when it is visible: a map drawn into a hidden box comes out grey.
   const wide = useMediaQuery("(min-width: 64rem)")
   const [view, setView] = useState<View>("list")
   const showList = wide || view === "list"
@@ -62,7 +73,7 @@ export default function AwardsPage() {
           <Target aria-hidden="true" className="size-4 text-primary" />
           دقة أفضل 5 فرص
         </p>
-        <PrecisionBar label="حكيم" value={S.precisionAgent} fill="bg-primary" />
+        <PrecisionBar label="ريفاكت" value={S.precisionAgent} fill="bg-primary" />
         <PrecisionBar label="التشابه النصي وحده" short="التشابه النصي" value={S.precisionText} fill="bg-stone-400" />
       </Card>
 
@@ -115,7 +126,16 @@ export default function AwardsPage() {
                 onSelect={toggle}
                 className="h-[60dvh] min-h-[22rem] lg:h-[calc(100dvh-14rem)] lg:max-h-[42rem] lg:min-h-[26rem]"
               />
-              <ul className="flex flex-wrap gap-x-4 gap-y-1 px-1 text-xs text-muted-foreground">
+              <ul className="flex flex-wrap gap-x-4 gap-y-1.5 px-1 text-xs text-muted-foreground">
+                <li className="flex items-center gap-1.5">
+                  <span className="size-3 rounded-full bg-chart-1 ring-2 ring-white" /> مورد
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="size-3 rounded-full bg-chart-3 ring-2 ring-white" /> مستقبل
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="size-3 rounded-full bg-chart-2 ring-2 ring-white" /> الاثنان
+                </li>
                 <li className="flex items-center gap-1.5">
                   <span className="h-1 w-5 rounded-full bg-chart-1" /> مجدية
                 </li>
@@ -164,6 +184,11 @@ function OpportunityItem({
   const byproduct = byproductById.get(o.byproduct)
   const material = materialByCode.get(byproduct?.material ?? "")?.nameAr ?? o.byproduct
   const lesson = history(o)
+  // Only factories that consented have a position, so only their routes can be opened.
+  const supplier = factory(o.supplier)
+  const receiver = factory(o.receiver)
+  const from = supplier?.lat != null && supplier.lon != null ? { lat: supplier.lat, lng: supplier.lon } : null
+  const to = receiver?.lat != null && receiver.lon != null ? { lat: receiver.lat, lng: receiver.lon } : null
   return (
     <li className={cn("rounded-xl ring-1 transition-colors", o.feasible ? "bg-card" : "bg-card/50", selected ? "ring-2 ring-primary/60" : "ring-(--glass-edge)")}>
       <button
@@ -215,12 +240,15 @@ function OpportunityItem({
               توقف سابقاً: {lesson.stopReason}
             </span>
           )}
-          {onShowMap && (
-            <Button type="button" variant="outline" onClick={onShowMap} className="h-10 w-full gap-1.5 rounded-xl bg-card">
-              <MapIcon aria-hidden="true" />
-              على الخريطة
-            </Button>
-          )}
+          <span className="flex flex-wrap gap-2">
+            {onShowMap && (
+              <Button type="button" variant="outline" onClick={onShowMap} className="h-10 flex-1 gap-1.5 rounded-xl bg-card">
+                <MapIcon aria-hidden="true" />
+                على الخريطة
+              </Button>
+            )}
+            {from && to && <GoogleMapsLink origin={from} destination={to} className="flex-1" />}
+          </span>
         </div>
       )}
     </li>

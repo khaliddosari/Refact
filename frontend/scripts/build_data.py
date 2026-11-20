@@ -1,7 +1,7 @@
 """
-Build src/data/hakeem-data.json from the challenge data pack.
+Build src/data/refact-data.json from the challenge data pack.
 
-Reads the two workbooks Hakeem is built on, straight out of the zip:
+Reads the two workbooks Refact is built on, straight out of the zip:
   06 · industrial symbiosis (RUH2): factories, byproducts, needs, the
        matching simulator and the agent's ranked opportunities
   07 · waste classification and transport violations (DMM2): records,
@@ -31,7 +31,7 @@ from pathlib import Path
 
 import openpyxl
 
-OUT = Path(__file__).resolve().parent.parent / "src" / "data" / "hakeem-data.json"
+OUT = Path(__file__).resolve().parent.parent / "src" / "data" / "refact-data.json"
 
 # Classification of each free-text stream onto the material taxonomy (T06),
 # as the classification agent resolves it through the synonyms table (T07).

@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "hakeem",
+  "name": "refact",
   "compatibility_date": "2026-11-01",
   // The built Vite app. Unknown paths fall back to index.html so React Router
   // routes (/tenders, /tracking ...) work on a direct visit or refresh.
@@ -8,4 +8,7 @@
     "directory": "./dist",
     "not_found_handling": "single-page-application"
   }
+  // A custom domain (for example ريفاكت.com, which Cloudflare takes in its
+  // punycode form) is attached once you own it:
+  //   "routes": [{ "pattern": "xn--....com", "custom_domain": true }]
 }

@@ -31,7 +31,7 @@ import {
 } from "@/data"
 import type { Opportunity, Trip } from "@/data/types"
 import { arCount, fmt, fmtInt, fmtQty, fmtSar } from "@/lib/format"
-import { NAV_ITEMS } from "@/lib/nav"
+import { PAGES } from "@/lib/nav"
 import { cn } from "@/lib/utils"
 
 const S = SYM.summary
@@ -128,7 +128,7 @@ const LOOP: { label: string; value: string; running?: boolean }[] = [
 ]
 
 export default function DashboardPage() {
-  const item = NAV_ITEMS[0]
+  const item = PAGES.dashboard
   return (
     <>
       <PageHeader icon={item.icon} title={item.label} />
@@ -159,7 +159,7 @@ export default function DashboardPage() {
         </Panel>
       </div>
 
-      <Panel className="mt-5 bg-card/55" title="وكلاء حكيم" aside={<StatusPill label="يعمل" tone="running" />} bodyClassName="gap-4">
+      <Panel className="mt-5 bg-card/55" title="وكلاء ريفاكت" aside={<StatusPill label="يعمل" tone="running" />} bodyClassName="gap-4">
         <ul className="grid gap-3 md:grid-cols-3">
           {AGENTS.map((agent) => (
             <AgentCard key={agent.name} {...agent} />

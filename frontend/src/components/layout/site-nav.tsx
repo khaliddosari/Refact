@@ -6,7 +6,7 @@ import { NAV_ITEMS } from "@/lib/nav"
 import { cn } from "@/lib/utils"
 
 /**
- * The six tabs. Plain links with aria-current (they change the page), styled
+ * The tabs. Plain links with aria-current (they change the page), styled
  * as tabs: the current one is a cream pill on the forest header, so where you
  * are is never in doubt.
  *

@@ -7,7 +7,7 @@ import { StatusPill, type Tone } from "@/components/status-pill"
 import { COMP, facilityLabel } from "@/data"
 import type { WasteRecord } from "@/data/types"
 import { fmt, fmtInt, fmtPct } from "@/lib/format"
-import { NAV_ITEMS } from "@/lib/nav"
+import { PAGES } from "@/lib/nav"
 import { cn } from "@/lib/utils"
 
 const HAZ_THRESHOLD = COMP.thresholds["حد التصنيف كخطرة (احتمال ≥)"] ?? 0.3
@@ -29,7 +29,7 @@ const gaps = [...new Set(COMP.generation.map((g) => g.facility))]
   .filter(Boolean)
 
 export default function InventoryPage() {
-  const item = NAV_ITEMS[3]
+  const item = PAGES.inventory
   const records = [...COMP.records].sort(
     (a, b) => Number(b.misdeclared) - Number(a.misdeclared) || b.pHazardous - a.pHazardous
   )

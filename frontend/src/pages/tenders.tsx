@@ -11,7 +11,7 @@ import { SYM, exclusionDetail, factory, materialByCode, opportunitiesFor, partyN
 import { useScrollFade } from "@/hooks/use-scroll-fade"
 import type { Byproduct, Family, Need, Opportunity } from "@/data/types"
 import { FAMILY_LABEL, ROUTE_LABEL, fmt, fmtInt, fmtQty, fmtSar, qualityLabel, unitLabel } from "@/lib/format"
-import { NAV_ITEMS } from "@/lib/nav"
+import { PAGES } from "@/lib/nav"
 
 type Kind = "offers" | "needs"
 
@@ -19,7 +19,7 @@ type Kind = "offers" | "needs"
 const facts = (...parts: (string | null | false)[]) => parts.filter(Boolean).join(" · ")
 
 export default function TendersPage() {
-  const item = NAV_ITEMS[1]
+  const item = PAGES.tenders
   const [kind, setKind] = useState<Kind>("offers")
   const [family, setFamily] = useState<Family | "all">("all")
   const chipsRef = useRef<HTMLDivElement>(null)

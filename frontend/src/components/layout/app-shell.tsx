@@ -4,7 +4,8 @@ import { Outlet, ScrollRestoration, useLocation } from "react-router"
 import { MobileTabBar } from "@/components/layout/mobile-tab-bar"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { SiteHeader } from "@/components/layout/site-header"
-import { BRAND_NAME, navItemFor } from "@/lib/nav"
+import { BRAND_NAME, HAS_TAB_BAR, navItemFor } from "@/lib/nav"
+import { cn } from "@/lib/utils"
 
 /** Header, the current tab's page, footer. The footer sits at the bottom even on a short page. */
 export function AppShell() {
@@ -18,8 +19,8 @@ export function AppShell() {
   }, [pathname])
 
   return (
-    // pb on phones keeps the footer clear of the fixed tab bar
-    <div className="flex min-h-dvh flex-col pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">
+    // pb on phones keeps the footer clear of the fixed tab bar (when there is one)
+    <div className={cn("flex min-h-dvh flex-col", HAS_TAB_BAR && "pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0")}>
       <a
         href="#main"
         className="sr-only z-50 rounded-xl bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:start-4 focus:top-4"

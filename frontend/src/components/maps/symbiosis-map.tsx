@@ -1,28 +1,53 @@
-import type { LatLngExpression, Polyline as LeafletPolyline } from "leaflet"
-import { useEffect, useRef } from "react"
-import { CircleMarker, Pane, Polyline, Tooltip } from "react-leaflet"
-
-import { BaseMap, FitBounds, boundsOf } from "@/components/maps/base-map"
-import { SYM, byproductById, exclusionDetail, factoryByKey, materialByCode } from "@/data"
+import { FitBounds, MapView } from "@/components/maps/map-view"
+import { FactoryPin, type PinRole } from "@/components/maps/pins"
+import { RoadLine } from "@/components/maps/road-line"
+import { SYM, factoryByKey } from "@/data"
 import type { Opportunity } from "@/data/types"
-import { fmtQty, fmtSar } from "@/lib/format"
+import { useRoadRoutes, type RouteRequest } from "@/hooks/use-road-routes"
+import { MAP } from "@/lib/map-colors"
+import { boundsOf, type LatLng } from "@/lib/roads"
 
+/** A factory's position. A factory that did not consent has none, so its exchanges are never drawn. */
+function at(key: string): LatLng | null {
+  const f = factoryByKey.get(key)
+  return f && f.lat != null && f.lon != null ? { lat: f.lat, lng: f.lon } : null
+}
+
+const PLACED = SYM.factories.flatMap((f) => (f.lat != null && f.lon != null ? [{ factory: f, at: { lat: f.lat, lng: f.lon } }] : []))
+const ALL = boundsOf(PLACED.map((p) => p.at))
 const MAX_VALUE = Math.max(...SYM.opportunities.map((o) => o.netValue))
 
-function at(key: string): LatLngExpression | null {
-  const f = factoryByKey.get(key)
-  return f && f.lat != null && f.lon != null ? [f.lat, f.lon] : null
+/** Module level, so the road routes are requested once. */
+const REQUESTS: RouteRequest[] = SYM.opportunities.flatMap((o) => {
+  const a = at(o.supplier)
+  const b = at(o.receiver)
+  return a && b ? [{ id: o.id, stops: [a, b] }] : []
+})
+
+/** Each factory's segment: supplier, receiver, both, or in no exchange. */
+const ROLES = new Map<string, PinRole>()
+for (const o of SYM.opportunities) {
+  for (const [key, role] of [[o.supplier, "supplier"], [o.receiver, "receiver"]] as const) {
+    const had = ROLES.get(key)
+    ROLES.set(key, had && had !== role ? "both" : role)
+  }
+}
+
+/** The opportunity a click on a factory opens: its best feasible one, else the first. */
+function opportunityOf(key: string) {
+  const mine = SYM.opportunities.filter((o) => o.supplier === key || o.receiver === key)
+  return [...mine].sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99))[0]
 }
 
 /**
- * Factories in the city and the exchanges between them: one line per
- * opportunity, thicker for more value a month (quantities come in tonnes,
- * cubic metres and MWh, so value is the comparable measure). Rejected pairs
- * are dashed. A factory that did not consent has no location, so its pair
- * is never drawn.
+ * The factories in the city and the exchanges between them, drawn along the
+ * real roads. A line's thickness is its monthly value (quantities come in
+ * tonnes, cubic metres and MWh, so value is the comparable measure); a dashed
+ * line is an exchange the agent rejected.
  *
- * Lines and factories sit in panes of their own, so the dots always draw
- * above the lines; the selected line is brought to the front of its pane.
+ * Selecting an exchange highlights its two factories (named, pulsing, in the
+ * leaf colour), lights its route with arrows from supplier to receiver, and
+ * pushes every other factory and route back.
  */
 export function SymbiosisMap({
   selectedId,
@@ -33,112 +58,81 @@ export function SymbiosisMap({
   onSelect: (id: string) => void
   className?: string
 }) {
-  const placed = SYM.factories.filter((f) => f.lat != null && f.lon != null)
-  const all = boundsOf(placed.map((f) => [f.lat!, f.lon!] as LatLngExpression))
-
+  const routes = useRoadRoutes(REQUESTS)
   const selected = SYM.opportunities.find((o) => o.id === selectedId)
-  const selectedEnds = selected ? [at(selected.supplier), at(selected.receiver)] : []
-  const focus =
-    selected && selectedEnds.every(Boolean) ? boundsOf(selectedEnds as LatLngExpression[]) : null
+
+  let focus = ALL
+  if (selected) {
+    const a = at(selected.supplier)
+    const b = at(selected.receiver)
+    const road = routes[selected.id]
+    if (road) focus = boundsOf(road.path)
+    else if (a && b) focus = boundsOf([a, b])
+  }
 
   return (
-    <BaseMap bounds={all} label="خريطة التكافل الصناعي في المدينة" className={className}>
-      <FitBounds bounds={focus ?? all} maxZoom={14} />
-      <Pane name="exchanges" style={{ zIndex: 410 }}>
-        {SYM.opportunities.map((o) => (
-          <ExchangeLine key={o.id} opportunity={o} selected={o.id === selectedId} onSelect={onSelect} />
-        ))}
-      </Pane>
-      <Pane name="factories" style={{ zIndex: 450 }}>
-        {placed.map((f) => {
-          const active = selected && (selected.supplier === f.key || selected.receiver === f.key)
-          return (
-            <CircleMarker
-              key={f.key}
-              center={[f.lat!, f.lon!]}
-              radius={active ? 8 : 6}
-              pathOptions={{
-                color: "var(--primary)",
-                weight: 2.5,
-                fillColor: active ? "var(--leaf)" : "var(--cream)",
-                fillOpacity: 1,
-              }}
-            >
-              <Tooltip direction="top" offset={[0, -6]}>
-                <div dir="rtl" className="text-start">
-                  <p className="font-bold">{f.name}</p>
-                  <p className="text-xs opacity-75" dir="ltr">
-                    {f.id}
-                  </p>
-                </div>
-              </Tooltip>
-            </CircleMarker>
-          )
-        })}
-      </Pane>
-    </BaseMap>
+    <MapView bounds={ALL} label="خريطة التكافل الصناعي في المدينة" className={className}>
+      <FitBounds {...focus} />
+
+      {SYM.opportunities.map((o) => (
+        <ExchangeLine
+          key={o.id}
+          opportunity={o}
+          road={routes[o.id]}
+          selected={o.id === selectedId}
+          dimmed={!!selected && o.id !== selectedId}
+          onSelect={onSelect}
+        />
+      ))}
+
+      {PLACED.map(({ factory: f, at: position }) => {
+        const involved = !!selected && (selected.supplier === f.key || selected.receiver === f.key)
+        const target = opportunityOf(f.key)
+        return (
+          <FactoryPin
+            key={f.key}
+            position={position}
+            name={f.name}
+            role={ROLES.get(f.key) ?? "none"}
+            selected={involved}
+            dimmed={!!selected && !involved}
+            labelSide={selected?.supplier === f.key ? "top" : "bottom"}
+            onClick={target ? () => onSelect(target.id) : undefined}
+          />
+        )
+      })}
+    </MapView>
   )
 }
 
 function ExchangeLine({
   opportunity: o,
+  road,
   selected,
+  dimmed,
   onSelect,
 }: {
   opportunity: Opportunity
+  /** undefined while loading, null if Google could not route it */
+  road: { path: LatLng[] } | null | undefined
   selected: boolean
+  dimmed: boolean
   onSelect: (id: string) => void
 }) {
-  const casing = useRef<LeafletPolyline>(null)
-  const line = useRef<LeafletPolyline>(null)
-
-  // Mount order decides stacking in Leaflet; a selection has to ask for the top.
-  useEffect(() => {
-    if (!selected) return
-    casing.current?.bringToFront()
-    line.current?.bringToFront()
-  }, [selected])
-
   const a = at(o.supplier)
   const b = at(o.receiver)
-  if (!a || !b) return null
-  const weight = o.feasible ? 3 + 9 * Math.sqrt(o.netValue / MAX_VALUE) : 2.5
-  const color = !o.feasible ? (o.compliant ? "#a8a29e" : "#dc2626") : selected ? "var(--leaf)" : "var(--chart-1)"
-  const material = materialByCode.get(byproductById.get(o.byproduct)?.material ?? "")
+  if (!a || !b || road === undefined) return null
   return (
-    <>
-      {/* Always mounted, only shown when selected, so it never lands on top of its own line. */}
-      <Polyline
-        ref={casing}
-        positions={[a, b]}
-        interactive={false}
-        pathOptions={{ color: "var(--primary)", weight: weight + 6, opacity: selected && o.feasible ? 0.95 : 0, lineCap: "round" }}
-      />
-      <Polyline
-        ref={line}
-        positions={[a, b]}
-        eventHandlers={{ click: () => onSelect(o.id) }}
-        pathOptions={{
-          color,
-          weight,
-          opacity: o.feasible ? 0.92 : 0.85,
-          dashArray: o.feasible ? undefined : "6 7",
-          lineCap: "round",
-        }}
-      >
-        <Tooltip sticky>
-          <div dir="rtl" className="text-start">
-            <p className="font-bold">{material?.nameAr ?? o.byproduct}</p>
-            {o.feasible ? (
-              <p className="text-xs">
-                {fmtQty(o.quantity, o.unit, true)} شهرياً · وفر {fmtSar(o.netValue)}
-              </p>
-            ) : (
-              <p className="text-xs text-red-800">مستبعدة: {exclusionDetail(o)}</p>
-            )}
-          </div>
-        </Tooltip>
-      </Polyline>
-    </>
+    <RoadLine
+      path={road?.path ?? [a, b]}
+      color={!o.feasible ? (o.compliant ? MAP.stone : MAP.red) : selected ? MAP.leaf : MAP.primary}
+      weight={o.feasible ? 3 + 8 * Math.sqrt(o.netValue / MAX_VALUE) : selected ? 5 : 3}
+      opacity={dimmed ? 0.22 : 0.92}
+      dashed={!o.feasible}
+      highlighted={selected && o.feasible}
+      arrows={selected && o.feasible}
+      zIndex={selected ? 20 : 2}
+      onClick={() => onSelect(o.id)}
+    />
   )
 }

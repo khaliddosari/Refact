@@ -2,6 +2,7 @@ import { Compass } from "lucide-react"
 import { Link } from "react-router"
 
 import { buttonVariants } from "@/components/ui/button"
+import { PAGES } from "@/lib/nav"
 import { cn } from "@/lib/utils"
 import { Card } from "@/components/ui/card"
 import {
@@ -22,11 +23,11 @@ export default function NotFoundPage() {
             <Compass aria-hidden="true" className="size-8" strokeWidth={1.6} />
           </EmptyMedia>
           <EmptyTitle className="text-lg font-bold">الصفحة غير موجودة</EmptyTitle>
-          <EmptyDescription>ربما تغيّر الرابط. اختر أحد الأقسام من الأعلى، أو عد إلى لوحة التحكم.</EmptyDescription>
+          <EmptyDescription>ربما تغيّر الرابط. عد إلى الصفحة الرئيسية.</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Link to="/" className={cn(buttonVariants(), "h-10 px-4 lg:h-9")}>
-            العودة إلى لوحة التحكم
+            العودة إلى {PAGES.agents.label}
           </Link>
         </EmptyContent>
       </Empty>

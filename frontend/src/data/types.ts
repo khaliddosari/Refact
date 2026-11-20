@@ -1,5 +1,5 @@
 /**
- * Shape of hakeem-data.json, produced by scripts/build_data.py from the
+ * Shape of refact-data.json, produced by scripts/build_data.py from the
  * challenge data pack (06 symbiosis in RUH2, 07 compliance in DMM2).
  * All quantities are monthly unless the field says otherwise.
  */
@@ -381,7 +381,7 @@ export interface Compliance {
   recommendations: string[]
 }
 
-export interface HakeemData {
+export interface RefactData {
   source: string
   symbiosis: Symbiosis
   compliance: Compliance

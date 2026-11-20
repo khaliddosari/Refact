@@ -1,9 +1,9 @@
-import raw from "./hakeem-data.json"
+import raw from "./refact-data.json"
 import type {
   Facility,
   Factory,
   GpsPoint,
-  HakeemData,
+  RefactData,
   Opportunity,
   QualitySpec,
   Trip,
@@ -14,7 +14,7 @@ import type {
  * never edit it by hand. 06 (symbiosis) is set in RUH2, 07 (compliance) in
  * DMM2, on Sunday 18 May 2025.
  */
-export const DATA = raw as HakeemData
+export const DATA = raw as RefactData
 export const SYM = DATA.symbiosis
 export const COMP = DATA.compliance
 

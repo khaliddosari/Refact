@@ -1,4 +1,5 @@
 import {
+  Bot,
   FileCheck,
   Gavel,
   LayoutDashboard,
@@ -9,7 +10,7 @@ import {
 } from "lucide-react"
 
 export type NavItem = {
-  /** Route path. "/" is the dashboard. */
+  /** Route path. "/" is the agents page. */
   to: string
   /** The tab label in the header. */
   label: string
@@ -20,51 +21,82 @@ export type NavItem = {
   description: string
 }
 
-/** The six header tabs, in reading order (right to left on screen). */
-export const NAV_ITEMS: NavItem[] = [
-  {
+/**
+ * Every page the app has, tab or not. Each page reads its own title and icon
+ * from here, and the router serves them all, so a page that is not in
+ * NAV_ITEMS below is still reachable by its path.
+ */
+export const PAGES = {
+  agents: {
     to: "/",
+    label: "الوكلاء",
+    icon: Bot,
+    description: "وكلاء ريفاكت الثلاثة: ما يعمل كل واحد منهم الآن وأهم ما وجده.",
+  },
+  dashboard: {
+    to: "/dashboard",
     label: "لوحة التحكم",
     short: "اللوحة",
     icon: LayoutDashboard,
-    description: "ملخص التكافل الصناعي والامتثال في المدينتين، كما يحسبه وكلاء حكيم.",
+    description: "ملخص التكافل الصناعي والامتثال في المدينتين، كما يحسبه وكلاء ريفاكت.",
   },
-  {
+  tenders: {
     to: "/tenders",
     label: "المناقصات",
     short: "مناقصات",
     icon: Gavel,
     description: "دفعات المخلفات المعروضة واحتياجات المواد، كما كتبتها المصانع وصنّفها الوكيل.",
   },
-  {
+  awards: {
     to: "/awards",
     label: "الترسيات",
     icon: FileCheck,
     description: "الفرص التي رتّبها وكيل المطابقة حسب الأثر، وما استُبعد منها ولماذا.",
   },
-  {
+  inventory: {
     to: "/inventory",
     label: "مخزوني",
     icon: Warehouse,
     description: "سجلات النفايات المعلنة وتصنيف الوكيل لها، وفجوات الإفصاح المتوقعة.",
   },
-  {
+  operations: {
     to: "/operations",
     label: "عملياتي",
     icon: Workflow,
     description: "رحلات نقل النفايات المفحوصة، وقائمة التفتيش مرتبة حسب الخطورة.",
   },
-  {
+  tracking: {
     to: "/tracking",
     label: "التتبع",
     icon: MapPinned,
     description: "مسارات المركبات والمواقع المعتمدة ورصد الطائرات المسيّرة على الخريطة.",
   },
+} satisfies Record<string, NavItem>
+
+/**
+ * The header tabs, in reading order (right to left on screen).
+ *
+ * The first demo had six tabs, from لوحة التحكم to التتبع. They are commented
+ * out here, not removed: their pages and routes still work, and each comes back
+ * as a tab the moment its line is uncommented. With a single tab left the
+ * phone bar hides itself (see mobile-tab-bar.tsx).
+ */
+export const NAV_ITEMS: NavItem[] = [
+  PAGES.agents,
+  // PAGES.dashboard,
+  // PAGES.tenders,
+  // PAGES.awards,
+  // PAGES.inventory,
+  // PAGES.operations,
+  // PAGES.tracking,
 ]
 
-export const BRAND_NAME = "حكيم"
+/** The phone tab bar only exists when there is more than one tab to switch between. */
+export const HAS_TAB_BAR = NAV_ITEMS.length > 1
 
-export function navItemFor(pathname: string) {
+export const BRAND_NAME = "ريفاكت"
+
+export function navItemFor(pathname: string): NavItem | undefined {
   const path = pathname.replace(/\/+$/, "") || "/"
-  return NAV_ITEMS.find((item) => item.to === path)
+  return Object.values<NavItem>(PAGES).find((item) => item.to === path)
 }

@@ -10,11 +10,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { COMP, MAX_TRIP_SCORE, caseByTrip, suspiciousTrips, tripsByRisk } from "@/data"
 import type { Trip } from "@/data/types"
 import { fmt, fmtInt } from "@/lib/format"
-import { NAV_ITEMS } from "@/lib/nav"
+import { PAGES } from "@/lib/nav"
 import { cn } from "@/lib/utils"
 
 export default function OperationsPage() {
-  const item = NAV_ITEMS[4]
+  const item = PAGES.operations
   return (
     <>
       <PageHeader icon={item.icon} title={item.label} actions={<CityChip city={COMP.city} />} />
