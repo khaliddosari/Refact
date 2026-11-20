@@ -531,12 +531,32 @@ body::before {
   mask-image: linear-gradient(to right, transparent, #000 1.75rem, #000 calc(100% - 1.75rem), transparent);
 }
 
-/* --- Maps (Google) ---------------------------------------------------------
-   Google draws the basemap and its own zoom buttons; this only sets the
-   surface behind the first paint and the text inside the map. The Google logo
-   and the copyright line stay untouched: the terms of use require them. */
-.map-surface .gm-style {
+/* --- Maps (MapLibre) -------------------------------------------------------
+   The basemap is drawn on a canvas; this dresses the controls round it to
+   match the glass panels. The attribution line stays: the data licences
+   (OpenStreetMap, OpenFreeMap) require it. */
+.map-surface .maplibregl-map {
   font-family: var(--font-sans);
+}
+.map-surface .maplibregl-ctrl-group {
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: var(--popover);
+  box-shadow: var(--popup-shadow);
+}
+.map-surface .maplibregl-ctrl-group button {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+.map-surface .maplibregl-ctrl-group button + button {
+  border-top: 1px solid color-mix(in oklab, var(--primary) 14%, transparent);
+}
+.map-surface .maplibregl-ctrl-attrib {
+  font-size: 0.75rem;
+}
+.map-surface .maplibregl-cooperative-gesture-screen {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
 }
 
 /* Letter-spacing pulls joined Arabic letters apart, so tracking utilities are

@@ -51,7 +51,7 @@ export const PAGES = {
     to: "/awards",
     label: "الترسيات",
     icon: FileCheck,
-    description: "الفرص التي رتّبها وكيل المطابقة حسب الأثر، وما استُبعد منها ولماذا.",
+    description: "الفرص التي رتّبها وكيل المشتريات حسب الأثر، وما استُبعد منها ولماذا.",
   },
   inventory: {
     to: "/inventory",
@@ -76,19 +76,20 @@ export const PAGES = {
 /**
  * The header tabs, in reading order (right to left on screen).
  *
- * The first demo had six tabs, from لوحة التحكم to التتبع. They are commented
- * out here, not removed: their pages and routes still work, and each comes back
- * as a tab the moment its line is uncommented. With a single tab left the
- * phone bar hides itself (see mobile-tab-bar.tsx).
+ * The first demo had six tabs, from لوحة التحكم to التتبع. Two are back
+ * (لوحة التحكم and التتبع); the other four are commented out, not removed:
+ * their pages and routes still work, and each comes back as a tab the moment
+ * its line is uncommented. With a single tab the phone bar hides itself (see
+ * mobile-tab-bar.tsx).
  */
 export const NAV_ITEMS: NavItem[] = [
   PAGES.agents,
-  // PAGES.dashboard,
+  PAGES.dashboard,
   // PAGES.tenders,
   // PAGES.awards,
   // PAGES.inventory,
   // PAGES.operations,
-  // PAGES.tracking,
+  PAGES.tracking,
 ]
 
 /** The phone tab bar only exists when there is more than one tab to switch between. */

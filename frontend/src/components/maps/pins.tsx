@@ -1,15 +1,16 @@
-import { AdvancedMarker } from "@vis.gl/react-google-maps"
-import { Truck } from "lucide-react"
+import { Marker } from "@vis.gl/react-maplibre"
+import { Car, Droplets, Flame, Truck } from "lucide-react"
 import type { ReactNode } from "react"
 
+import { fmt, fmtDrive } from "@/lib/format"
+import { MAP } from "@/lib/map-colors"
 import type { LatLng } from "@/lib/roads"
 import { cn } from "@/lib/utils"
 
 /**
- * Markers are advanced markers whose content is plain HTML in the theme's own
+ * Markers are map markers whose content is plain HTML in the theme's own
  * classes, so there are no image assets and nothing to restyle per map.
- * Every pin is anchored on its centre (the default anchors the bottom, for
- * teardrop pins).
+ * Every pin is anchored on its centre.
  */
 
 export type PinRole = "supplier" | "receiver" | "both" | "none"
@@ -20,6 +21,15 @@ const ROLE_FILL: Record<PinRole, string> = {
   both: "bg-chart-2",
   none: "bg-cream",
 }
+
+/** A click on a marker must not also be a click on the map under it. */
+const handle = (onClick?: () => void) =>
+  onClick
+    ? (e: { originalEvent: { stopPropagation: () => void } }) => {
+        e.originalEvent.stopPropagation()
+        onClick()
+      }
+    : undefined
 
 /**
  * A factory. The segment shows in the fill (supplier, receiver, both, or in no
@@ -44,29 +54,24 @@ export function FactoryPin({
   onClick?: () => void
 }) {
   return (
-    <AdvancedMarker
-      position={position}
-      title={name}
-      onClick={onClick}
-      zIndex={selected ? 30 : dimmed ? 10 : 20}
-      anchorLeft="-50%"
-      anchorTop="-50%"
+    <Marker
+      longitude={position.lng}
+      latitude={position.lat}
+      anchor="center"
+      style={{ zIndex: selected ? 30 : dimmed ? 10 : 20 }}
+      onClick={handle(onClick)}
     >
-      <div className={cn("relative grid place-items-center transition-opacity", dimmed && "opacity-40")}>
-        {selected && (
-          <span aria-hidden="true" className="absolute size-11 rounded-full bg-leaf/60 motion-safe:animate-ping" />
-        )}
+      <div title={name} className={cn("relative grid place-items-center transition-opacity", dimmed && "opacity-40", onClick && "cursor-pointer")}>
+        {selected && <span aria-hidden="true" className="absolute size-11 rounded-full bg-leaf/60 motion-safe:animate-ping" />}
         <span
           className={cn(
             "block rounded-full border-2 shadow-md transition-all",
-            selected
-              ? "size-7 border-primary bg-leaf ring-4 ring-white"
-              : cn("size-[1.15rem] border-white ring-1 ring-primary/40", ROLE_FILL[role])
+            selected ? "size-7 border-primary bg-leaf ring-4 ring-white" : cn("size-[1.15rem] border-white ring-1 ring-primary/40", ROLE_FILL[role])
           )}
         />
         {selected && <MapLabel side={labelSide}>{name}</MapLabel>}
       </div>
-    </AdvancedMarker>
+    </Marker>
   )
 }
 
@@ -84,7 +89,7 @@ export function MapLabel({
     <span
       dir="rtl"
       className={cn(
-        "pointer-events-none absolute left-1/2 w-max max-w-56 -translate-x-1/2 rounded-lg bg-popover px-2 py-1 text-center text-xs leading-tight font-bold shadow-(--popup-shadow)",
+        "pointer-events-none absolute left-1/2 w-max max-w-40 -translate-x-1/2 rounded-lg bg-popover px-2 py-1 text-center text-xs leading-tight font-bold shadow-(--popup-shadow) sm:max-w-56",
         side === "top" ? "bottom-full mb-3" : "top-full mt-3",
         tone === "alert" ? "text-red-800" : "text-primary"
       )}
@@ -112,7 +117,13 @@ export function LabelMarker({
   zIndex?: number
 }) {
   return (
-    <AdvancedMarker position={position} zIndex={zIndex} anchorLeft="-50%" anchorTop={above ? "-140%" : "-50%"} clickable={false}>
+    <Marker
+      longitude={position.lng}
+      latitude={position.lat}
+      anchor="center"
+      offset={above ? [0, -30] : [0, 0]}
+      style={{ zIndex, pointerEvents: "none" }}
+    >
       <span
         dir="rtl"
         className={cn(
@@ -123,31 +134,73 @@ export function LabelMarker({
       >
         {children}
       </span>
-    </AdvancedMarker>
+    </Marker>
   )
 }
 
 /** The vehicle, at its current position on the track. */
 export function TruckPin({ position }: { position: LatLng }) {
   return (
-    <AdvancedMarker position={position} zIndex={50} anchorLeft="-50%" anchorTop="-50%" clickable={false} title="المركبة">
-      <span className="grid size-9 place-items-center rounded-full bg-red-600 text-white shadow-lg ring-4 ring-white">
+    <Marker longitude={position.lng} latitude={position.lat} anchor="center" style={{ zIndex: 50, pointerEvents: "none" }}>
+      <span title="المركبة" className="grid size-9 place-items-center rounded-full bg-red-600 text-white shadow-lg ring-4 ring-white">
         <Truck aria-hidden="true" className="size-[1.1rem]" />
       </span>
-    </AdvancedMarker>
+    </Marker>
   )
 }
 
 /** A drone sighting: a diamond. Old dumps are grey, fresh finds red. */
 export function DronePin({ position, title, old }: { position: LatLng; title: string; old?: boolean }) {
   return (
-    <AdvancedMarker position={position} title={title} zIndex={15} anchorLeft="-50%" anchorTop="-50%">
-      <span
-        className={cn(
-          "block size-3.5 rotate-45 rounded-[3px] shadow ring-2 ring-white",
-          old ? "bg-stone-500" : "bg-red-800"
+    <Marker longitude={position.lng} latitude={position.lat} anchor="center" style={{ zIndex: 15 }}>
+      <span title={title} className={cn("block size-3.5 rotate-45 rounded-[3px] shadow ring-2 ring-white", old ? "bg-stone-500" : "bg-red-800")} />
+    </Marker>
+  )
+}
+
+const BUBBLE_ICON = { drive: Car, heat: Flame, water: Droplets } as const
+
+/**
+ * The time and distance on a route, in the blue bubble Google draws on one:
+ * the time bold over the distance. A pipe has a distance only.
+ */
+export function RouteBubble({
+  at,
+  meters,
+  seconds,
+  kind = "drive",
+}: {
+  at: LatLng
+  meters: number
+  /** Driving time; omitted for a pipe. */
+  seconds?: number
+  kind?: keyof typeof BUBBLE_ICON
+}) {
+  const Icon = BUBBLE_ICON[kind]
+  const km = `${fmt(meters / 1000)} كم`
+  return (
+    <Marker longitude={at.lng} latitude={at.lat} anchor="top-left" offset={[10, 6]} style={{ zIndex: 40, pointerEvents: "none" }}>
+      <div
+        dir="rtl"
+        style={{ backgroundColor: MAP.bubble }}
+        className="relative flex flex-col gap-1 rounded-md px-2.5 py-1.5 text-white shadow-lg ring-1 ring-white/70"
+      >
+        <span aria-hidden="true" style={{ backgroundColor: MAP.bubble }} className="absolute -top-1 left-3 size-2.5 rotate-45" />
+        {seconds !== undefined ? (
+          <>
+            <span className="flex items-center gap-1.5 text-sm leading-none font-bold">
+              <Icon aria-hidden="true" className="size-4" />
+              {fmtDrive(seconds)}
+            </span>
+            <span className="text-xs leading-none tabular-nums opacity-95">{km}</span>
+          </>
+        ) : (
+          <span className="flex items-center gap-1.5 text-sm leading-none font-bold">
+            <Icon aria-hidden="true" className="size-4" />
+            {km}
+          </span>
         )}
-      />
-    </AdvancedMarker>
+      </div>
+    </Marker>
   )
 }

@@ -1,14 +1,11 @@
-import { Circle } from "@vis.gl/react-google-maps"
-
 import { FitBounds, MapView } from "@/components/maps/map-view"
-import { DronePin, FactoryPin, LabelMarker, TruckPin } from "@/components/maps/pins"
-import { RoadLine } from "@/components/maps/road-line"
+import { DronePin, FactoryPin, LabelMarker, RouteBubble, TruckPin } from "@/components/maps/pins"
+import { AreaLayers, RouteLines, RouteOverlay, type Area, type RouteLine } from "@/components/maps/route-layers"
 import { COMP, gpsFor, siteById, tripOrigin, tripsByRisk } from "@/data"
+import { outlineFor, routeFor } from "@/data/map"
 import type { GpsPoint, Trip } from "@/data/types"
-import { useRoadRoutes, type RouteRequest } from "@/hooks/use-road-routes"
 import { DRONE_LABEL, fmt, hhmm } from "@/lib/format"
-import { MAP } from "@/lib/map-colors"
-import { boundsOf, positionOnTrack, trackStops, type LatLng, type RoadRoute } from "@/lib/roads"
+import { boundsOf, circleRing, pointAlong, positionOnTrack, type LatLng, type RoadRoute } from "@/lib/roads"
 
 const FACILITIES = COMP.facilities.map((f) => ({ facility: f, at: { lat: f.lat, lng: f.lon } }))
 const SITES = COMP.sites.map((s) => ({ site: s, at: { lat: s.lat, lng: s.lon } }))
@@ -18,22 +15,9 @@ const EVERYTHING = boundsOf([
   ...COMP.gps.map((p) => ({ lat: p.lat, lng: p.lon })),
 ])
 
-/** The expected road from each trip's facility to the site it reported (module level: requested once). */
-function legOf(t: Trip): LatLng[] | null {
-  const origin = tripOrigin(t)
-  const site = t.site ? siteById.get(t.site) : undefined
-  return origin && site ? [{ lat: origin.lat, lng: origin.lon }, { lat: site.lat, lng: site.lon }] : null
-}
-const TRIP_REQUESTS: RouteRequest[] = COMP.trips.flatMap((t) => {
-  const stops = legOf(t)
-  return stops ? [{ id: t.id, stops }] : []
-})
-
-/** The recorded track of a trip, as the stops a road route has to pass through. */
-export function trackRequest(trip: Trip): RouteRequest | null {
-  const points = gpsFor(trip)
-  if (points.length < 2) return null
-  return { id: `track-${trip.id}`, stops: trackStops(points).stops }
+/** The recorded track of a trip, snapped to the roads (built by scripts/build_map_data.py), if it has one. */
+export function trackFor(trip: Trip): RoadRoute | undefined {
+  return routeFor(`track-${trip.id}`)
 }
 
 /** The longest stretch a vehicle sat still: where it stopped, and for how long. */
@@ -59,8 +43,9 @@ export function longestStop(points: GpsPoint[]) {
  * expected road, and, for the selected trip, its recorded GPS track snapped to
  * the roads, the stop, the drone sightings and the vehicle itself.
  *
- * Selecting a trip highlights its facility (named, pulsing) and the site it
- * reported (stronger geofence), lights its route, and pushes the rest back.
+ * Selecting a trip lights its route the way Google does (casing, traffic, a
+ * bubble with the time and distance), outlines its facility and the site it
+ * reported with a dotted red line, and pushes the rest back.
  */
 export function TrackingMap({
   selectedId,
@@ -74,31 +59,60 @@ export function TrackingMap({
   onSelect: (id: string) => void
   /** Current playback position on the selected trip's track. */
   truckAt: LatLng | null
-  /** The selected trip's GPS track snapped to roads: undefined while loading, null if unavailable. */
-  track: RoadRoute | null | undefined
+  /** The selected trip's GPS track snapped to roads, if it has one. */
+  track: RoadRoute | undefined
   /** The details card floats over the end side of the map: keep the trip clear of it. */
   roomForCard: boolean
   className?: string
 }) {
-  const roads = useRoadRoutes(TRIP_REQUESTS)
   const selected = COMP.trips.find((t) => t.id === selectedId)!
   const fixes = gpsFor(selected)
   const origin = tripOrigin(selected)
   const selectedSite = selected.site ? siteById.get(selected.site) : undefined
+  const leg = routeFor(selected.id)
   const stop = longestStop(fixes)
   const stopAt = stop ? positionOnTrack(fixes, stop.fromMinute, track) : null
+
+  // No useMemo below: the React Compiler keeps these stable while their inputs are.
+  // The recorded track, or (without a snapped one) straight lines through the fixes.
+  const trackPath = track?.path ?? fixes.map((p) => ({ lat: p.lat, lng: p.lon }))
 
   // What the view frames: the trip's own geography.
   const own: LatLng[] = [
     ...(origin ? [{ lat: origin.lat, lng: origin.lon }] : []),
     ...(selectedSite ? [{ lat: selectedSite.lat, lng: selectedSite.lon }] : []),
-    ...(track ? track.path : fixes.map((p) => ({ lat: p.lat, lng: p.lon }))),
-    ...(roads[selected.id]?.path ?? []),
+    ...(fixes.length > 1 ? trackPath : []),
+    ...(leg?.path ?? []),
   ]
   const focus = own.length > 1 ? boundsOf(own) : EVERYTHING
 
-  // Clean trips mount first so suspicious ones draw above them.
-  const ordered = [...tripsByRisk].sort((a, b) => Number(a.suspicious) - Number(b.suspicious))
+  // Clean trips first, so suspicious ones draw above them; the selected one is lit.
+  const legs: RouteLine[] = [...tripsByRisk]
+    .sort((a, b) => Number(a.suspicious) - Number(b.suspicious))
+    .flatMap((t) => {
+      const road = routeFor(t.id)
+      if (!road) return []
+      return [
+        {
+          id: t.id,
+          path: road.path,
+          look: t.suspicious ? "alert" : "muted",
+          state: t.id === selectedId ? "selected" : "dimmed",
+          width: 3,
+        } satisfies RouteLine,
+      ]
+    })
+  const recorded: RouteLine[] = fixes.length > 1 ? [{ id: `track-${selectedId}`, path: trackPath, look: "route", state: "selected" }] : []
+  const lines = [...legs, ...recorded]
+
+  const areas: Area[] = SITES.map(({ site, at }) => ({
+    id: site.id,
+    ring: circleRing(at, site.geofenceM),
+    look: site.id === selected.site ? "site-selected" : "site",
+  }))
+  const outline = outlineFor(origin?.id)
+  if (outline) areas.push({ id: `outline-${origin!.id}`, ring: outline, look: "outline" })
+  if (stopAt) areas.push({ id: "stop", ring: circleRing(stopAt, 140), look: "stop" })
 
   return (
     <MapView
@@ -106,79 +120,29 @@ export function TrackingMap({
       label="خريطة تتبع رحلات نقل النفايات"
       gesture={roomForCard ? "greedy" : "cooperative"}
       className={className}
+      interactiveLayerIds={["routes-hit"]}
+      onClick={(e) => {
+        const id = e.features?.[0]?.properties?.id
+        if (typeof id === "string" && !id.startsWith("track-")) onSelect(id)
+      }}
     >
       <FitBounds {...focus} padding={{ top: 72, bottom: 72, left: 72, right: roomForCard ? 430 : 72 }} />
 
-      {SITES.map(({ site, at }) => {
-        const chosen = site.id === selected.site
-        return (
-          <Circle
-            key={site.id}
-            center={at}
-            radius={site.geofenceM}
-            clickable={false}
-            strokeColor={MAP.primary}
-            strokeWeight={chosen ? 3 : 1.5}
-            strokeOpacity={chosen ? 1 : 0.55}
-            fillColor={MAP.primary}
-            fillOpacity={chosen ? 0.28 : 0.1}
-            zIndex={1}
-          />
-        )
-      })}
+      <AreaLayers areas={areas} />
+      <RouteLines lines={lines} />
+      {leg && <RouteOverlay route={leg} id="leg" />}
+      {track && fixes.length > 1 && <RouteOverlay route={track} id="track" />}
+
       {SITES.map(({ site, at }) => (
         <LabelMarker key={`${site.id}-label`} position={at} dimmed={site.id !== selected.site}>
           <bdi dir="ltr">{site.id}</bdi>
         </LabelMarker>
       ))}
 
-      {ordered.map((t) => {
-        const stops = legOf(t)
-        const road = roads[t.id]
-        if (!stops || road === undefined) return null
-        const isSelected = t.id === selectedId
-        return (
-          <RoadLine
-            key={t.id}
-            path={road?.path ?? stops}
-            color={t.suspicious ? MAP.red : MAP.stone}
-            weight={isSelected ? 6 : 3}
-            opacity={isSelected ? 0.95 : 0.4}
-            highlighted={isSelected}
-            arrows={isSelected}
-            zIndex={isSelected ? 20 : 2}
-            onClick={() => onSelect(t.id)}
-          />
-        )
-      })}
-
-      {fixes.length > 1 && (track !== undefined) && (
-        <RoadLine
-          path={track ? track.path : fixes.map((p) => ({ lat: p.lat, lng: p.lon }))}
-          color={MAP.red}
-          weight={6}
-          highlighted
-          arrows
-          zIndex={25}
-        />
-      )}
-
       {stop && stopAt && (
-        <>
-          <Circle
-            center={stopAt}
-            radius={140}
-            clickable={false}
-            strokeColor={MAP.red}
-            strokeWeight={2}
-            fillColor={MAP.red}
-            fillOpacity={0.16}
-            zIndex={26}
-          />
-          <LabelMarker position={stopAt} tone="alert" above zIndex={40}>
-            توقف {fmt(stop.length, 0)} دقيقة · <bdi dir="ltr">{hhmm(stop.from)}–{hhmm(stop.to)}</bdi>
-          </LabelMarker>
-        </>
+        <LabelMarker position={stopAt} tone="alert" above zIndex={40}>
+          توقف {fmt(stop.length, 0)} دقيقة · <bdi dir="ltr">{hhmm(stop.from)}–{hhmm(stop.to)}</bdi>
+        </LabelMarker>
       )}
 
       {FACILITIES.map(({ facility: f, at }) => {
@@ -207,6 +171,7 @@ export function TrackingMap({
           />
         ))}
 
+      {leg && <RouteBubble at={pointAlong(leg.path, 0.5)} meters={leg.distanceMeters} seconds={leg.durationSeconds} />}
       {truckAt && <TruckPin position={truckAt} />}
     </MapView>
   )

@@ -2,63 +2,19 @@ import type { GpsPoint } from "@/data/types"
 
 export type LatLng = { lat: number; lng: number }
 
-/** A driving route along real roads, as Google's Routes API returns it. */
+/** A stretch of a route drawn orange (1, slow) or red (2, heavy): points `from` to `to`, inclusive. */
+export type TrafficRun = { from: number; to: number; level: 1 | 2 }
+
+/** A driving route along real roads, from src/data/map.ts. */
 export type RoadRoute = {
   /** Origin to destination, following the roads. */
   path: LatLng[]
-  /** One path per leg. A leg ends at every stop, so a track keeps its fixes. */
+  /** A recorded track has one path per leg; a leg ends at every stop. Empty for other routes. */
   legs: LatLng[][]
   distanceMeters: number
+  /** Driving time, with the delay of the traffic on it. */
   durationSeconds: number
-}
-
-const toLatLng = (p: { lat: number; lng: number }): LatLng => ({ lat: p.lat, lng: p.lng })
-const stopsKey = (stops: LatLng[]) => stops.map((p) => `${p.lat.toFixed(5)},${p.lng.toFixed(5)}`).join(">")
-
-/**
- * One request per distinct set of stops, kept for the page's lifetime: the
- * data does not move, and a route is only ever asked for once. A failure is
- * remembered too (as null), so a missing API or a billing error is not
- * retried on every render. Held in memory only; Google's terms do not allow
- * storing routes.
- */
-const cache = new Map<string, Promise<RoadRoute | null>>()
-
-export function roadRoute(routes: google.maps.RoutesLibrary, stops: LatLng[]): Promise<RoadRoute | null> {
-  const key = stopsKey(stops)
-  let hit = cache.get(key)
-  if (!hit) {
-    hit = request(routes, stops)
-    cache.set(key, hit)
-  }
-  return hit
-}
-
-async function request(routes: google.maps.RoutesLibrary, stops: LatLng[]): Promise<RoadRoute | null> {
-  try {
-    const [origin, ...rest] = stops
-    const destination = rest.pop()
-    if (!destination) return null
-    const { routes: found } = await routes.Route.computeRoutes({
-      origin,
-      destination,
-      intermediates: rest.map((location) => ({ location })),
-      travelMode: "DRIVING",
-      polylineQuality: "HIGH_QUALITY",
-      fields: ["path", "legs", "distanceMeters", "durationMillis"],
-    })
-    const route = found?.[0]
-    if (!route?.path?.length) return null
-    return {
-      path: route.path.map(toLatLng),
-      legs: (route.legs ?? []).map((leg) => leg.path.map(toLatLng)),
-      distanceMeters: route.distanceMeters ?? 0,
-      durationSeconds: (route.durationMillis ?? 0) / 1000,
-    }
-  } catch (error) {
-    console.warn("Road route unavailable; drawing a straight line instead.", error)
-    return null
-  }
+  traffic: TrafficRun[]
 }
 
 /* Geometry */
@@ -91,6 +47,50 @@ export function pointAlong(path: LatLng[], fraction: number): LatLng {
     remaining -= lengths[i]
   }
   return path[path.length - 1]
+}
+
+/** A circle as a closed ring of [lng, lat] points: a geofence, or the spot a vehicle stood. */
+export function circleRing(center: LatLng, radiusMeters: number, steps = 72): [number, number][] {
+  const dLat = radiusMeters / 111_320
+  const dLng = dLat / Math.cos(rad(center.lat))
+  const ring: [number, number][] = []
+  for (let i = 0; i <= steps; i++) {
+    const angle = (2 * Math.PI * i) / steps
+    ring.push([center.lng + dLng * Math.cos(angle), center.lat + dLat * Math.sin(angle)])
+  }
+  return ring
+}
+
+/**
+ * Where a route turns: the vertices where the heading changes by `minTurn`
+ * degrees over about 90 m, at least `spacing` metres apart and clear of the
+ * ends. They are the white dots on a route.
+ */
+export function turnPoints(path: LatLng[], minTurn = 55, spacing = 260): LatLng[] {
+  if (path.length < 3) return []
+  const along = [0]
+  for (let i = 1; i < path.length; i++) along.push(along[i - 1] + distance(path[i - 1], path[i]))
+  const total = along[along.length - 1]
+  const bearing = (a: LatLng, b: LatLng) => {
+    const dx = (b.lng - a.lng) * Math.cos(rad((a.lat + b.lat) / 2))
+    return (Math.atan2(dx, b.lat - a.lat) * 180) / Math.PI
+  }
+  const dots: LatLng[] = []
+  let last = -Infinity
+  for (let i = 1; i < path.length - 1; i++) {
+    if (along[i] < 140 || along[i] > total - 140 || along[i] - last < spacing) continue
+    let before = i
+    while (before > 0 && along[i] - along[before] < 45) before--
+    let after = i
+    while (after < path.length - 1 && along[after] - along[i] < 45) after++
+    let turn = Math.abs(bearing(path[i], path[after]) - bearing(path[before], path[i]))
+    if (turn > 180) turn = 360 - turn
+    if (turn >= minTurn) {
+      dots.push(path[i])
+      last = along[i]
+    }
+  }
+  return dots
 }
 
 export type Bounds = { north: number; south: number; east: number; west: number }
@@ -140,8 +140,8 @@ const fixTime = (p: GpsPoint) => Date.parse(p.time.replace(" ", "T")) / 60000
 /**
  * Where the vehicle is `minute` minutes into the track. On a snapped track it
  * follows the road between two fixes by the share of time elapsed; sitting
- * still, it stays on its stop. Without a snapped route (loading, or the API
- * is unavailable) it moves in straight lines between the fixes.
+ * still, it stays on its stop. Without a snapped route it moves in straight
+ * lines between the fixes.
  */
 export function positionOnTrack(points: GpsPoint[], minute: number, snapped?: RoadRoute | null) {
   const t = fixTime(points[0]) + minute

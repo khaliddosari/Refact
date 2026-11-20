@@ -2,8 +2,6 @@ import { Coins, History, Leaf, List, ListChecks, Map as MapIcon, Mountain, Targe
 import { useState } from "react"
 
 import { CityChip, FamilyIcon, MiniStat, PartyArrow } from "@/components/data-display"
-import { GoogleMapsLink } from "@/components/maps/google-link"
-import { MapsProvider } from "@/components/maps/maps-provider"
 import { SymbiosisMap } from "@/components/maps/symbiosis-map"
 import { PageHeader } from "@/components/page-header"
 import { Panel } from "@/components/panel"
@@ -21,13 +19,29 @@ import {
   materialByCode,
   partyName,
 } from "@/data"
+import { routeFor } from "@/data/map"
 import type { Opportunity } from "@/data/types"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { fmt, fmtInt, fmtPct, fmtQty, fmtSar } from "@/lib/format"
+import { MAP } from "@/lib/map-colors"
 import { PAGES } from "@/lib/nav"
+import { distance } from "@/lib/roads"
 import { cn } from "@/lib/utils"
 
 const S = SYM.summary
+
+/**
+ * How far an exchange goes, the way the map draws it: the length of its road
+ * route, or of the straight line for a pipe. Nothing for a factory without a position.
+ */
+function lengthKm(o: Opportunity) {
+  const road = routeFor(o.id)
+  if (road) return road.distanceMeters / 1000
+  const a = factory(o.supplier)
+  const b = factory(o.receiver)
+  if (a?.lat == null || a.lon == null || b?.lat == null || b.lon == null) return null
+  return distance({ lat: a.lat, lng: a.lon }, { lat: b.lat, lng: b.lon }) / 1000
+}
 
 /** A stopped exchange between the same two factories: the lesson the agent carries forward. */
 function history(o: Opportunity) {
@@ -37,14 +51,6 @@ function history(o: Opportunity) {
 type View = "list" | "map"
 
 export default function AwardsPage() {
-  return (
-    <MapsProvider>
-      <AwardsScreen />
-    </MapsProvider>
-  )
-}
-
-function AwardsScreen() {
   const item = PAGES.awards
   // Nothing selected at first: the map opens on the whole city.
   const [selected, setSelected] = useState<string | null>(null)
@@ -137,7 +143,7 @@ function AwardsScreen() {
                   <span className="size-3 rounded-full bg-chart-2 ring-2 ring-white" /> الاثنان
                 </li>
                 <li className="flex items-center gap-1.5">
-                  <span className="h-1 w-5 rounded-full bg-chart-1" /> مجدية
+                  <span className="h-1 w-5 rounded-full" style={{ backgroundColor: MAP.route }} /> مجدية
                 </li>
                 <li className="flex items-center gap-1.5">
                   <span className="h-0 w-5 border-t-2 border-dashed border-red-600" /> ممنوعة
@@ -184,11 +190,7 @@ function OpportunityItem({
   const byproduct = byproductById.get(o.byproduct)
   const material = materialByCode.get(byproduct?.material ?? "")?.nameAr ?? o.byproduct
   const lesson = history(o)
-  // Only factories that consented have a position, so only their routes can be opened.
-  const supplier = factory(o.supplier)
-  const receiver = factory(o.receiver)
-  const from = supplier?.lat != null && supplier.lon != null ? { lat: supplier.lat, lng: supplier.lon } : null
-  const to = receiver?.lat != null && receiver.lon != null ? { lat: receiver.lat, lng: receiver.lon } : null
+  const km = lengthKm(o)
   return (
     <li className={cn("rounded-xl ring-1 transition-colors", o.feasible ? "bg-card" : "bg-card/50", selected ? "ring-2 ring-primary/60" : "ring-(--glass-edge)")}>
       <button
@@ -230,7 +232,7 @@ function OpportunityItem({
           <span className="flex flex-wrap gap-1.5">
             <Chip>{fmtQty(o.quantity, o.unit, true)}/شهر</Chip>
             <Chip>تغطي {fmtPct(o.coverage)}</Chip>
-            <Chip>{fmt(o.distanceKm)} كم</Chip>
+            {km != null && <Chip>{fmt(km)} كم</Chip>}
             <Chip>{fmt(o.co2)} طن CO₂</Chip>
             {o.landfillDiverted > 0 && <Chip>{fmtInt(o.landfillDiverted)} طن عن الردم</Chip>}
           </span>
@@ -240,15 +242,12 @@ function OpportunityItem({
               توقف سابقاً: {lesson.stopReason}
             </span>
           )}
-          <span className="flex flex-wrap gap-2">
-            {onShowMap && (
-              <Button type="button" variant="outline" onClick={onShowMap} className="h-10 flex-1 gap-1.5 rounded-xl bg-card">
-                <MapIcon aria-hidden="true" />
-                على الخريطة
-              </Button>
-            )}
-            {from && to && <GoogleMapsLink origin={from} destination={to} className="flex-1" />}
-          </span>
+          {onShowMap && (
+            <Button type="button" variant="outline" onClick={onShowMap} className="h-10 w-full gap-1.5 rounded-xl bg-card">
+              <MapIcon aria-hidden="true" />
+              على الخريطة
+            </Button>
+          )}
         </div>
       )}
     </li>

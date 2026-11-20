@@ -3,9 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "react-router"
 
 import { CityChip, PartyArrow, TripFlags } from "@/components/data-display"
-import { GoogleMapsLink } from "@/components/maps/google-link"
-import { MapsProvider } from "@/components/maps/maps-provider"
-import { TrackingMap, longestStop, trackRequest } from "@/components/maps/tracking-map"
+import { TrackingMap, trackFor } from "@/components/maps/tracking-map"
 import { PageHeader } from "@/components/page-header"
 import { StatusPill } from "@/components/status-pill"
 import { Button } from "@/components/ui/button"
@@ -14,11 +12,10 @@ import { Slider } from "@/components/ui/slider"
 import { COMP, gpsFor, siteById, tripOrigin, tripsByRisk } from "@/data"
 import type { GpsPoint, Trip } from "@/data/types"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { useRoadRoutes } from "@/hooks/use-road-routes"
 import { useScrollFade } from "@/hooks/use-scroll-fade"
 import { fmt, fmtInt, hhmm } from "@/lib/format"
 import { PAGES } from "@/lib/nav"
-import { positionOnTrack, type LatLng } from "@/lib/roads"
+import { positionOnTrack } from "@/lib/roads"
 import { cn } from "@/lib/utils"
 
 const minutesOf = (ts: string) => Date.parse(ts.replace(" ", "T")) / 60000
@@ -33,14 +30,6 @@ function destination(t: Trip) {
 }
 
 export default function TrackingPage() {
-  return (
-    <MapsProvider>
-      <TrackingScreen />
-    </MapsProvider>
-  )
-}
-
-function TrackingScreen() {
   const item = PAGES.tracking
   const [params, setParams] = useSearchParams()
   const requested = params.get("trip")
@@ -50,28 +39,8 @@ function TrackingScreen() {
   // The recorded track, snapped to the roads: the map draws it, and playback
   // moves the vehicle along it instead of cutting corners between fixes.
   const track = useMemo(() => gpsFor(selected), [selected])
-  const requests = useMemo(() => {
-    const request = trackRequest(selected)
-    return request ? [request] : []
-  }, [selected])
-  const snapped = useRoadRoutes(requests)[`track-${selected.id}`]
+  const snapped = trackFor(selected)
   const wide = useMediaQuery("(min-width: 64rem)")
-
-  // The same trip in Google Maps itself: the recorded track through its longest
-  // stop, or the road from the facility to the site it reported.
-  const home = tripOrigin(selected)
-  const reported = selected.site ? siteById.get(selected.site) : undefined
-  let link: { origin: LatLng; destination: LatLng; via?: LatLng[] } | null = null
-  if (track.length > 1) {
-    const stop = longestStop(track)
-    link = {
-      origin: { lat: track[0].lat, lng: track[0].lon },
-      destination: { lat: track[track.length - 1].lat, lng: track[track.length - 1].lon },
-      via: stop ? [{ lat: stop.fix.lat, lng: stop.fix.lon }] : undefined,
-    }
-  } else if (home && reported) {
-    link = { origin: { lat: home.lat, lng: home.lon }, destination: { lat: reported.lat, lng: reported.lon } }
-  }
 
   const total = track.length > 1 ? minutesOf(track[track.length - 1].time) - minutesOf(track[0].time) : 0
   const [minute, setMinute] = useState(0)
@@ -175,7 +144,6 @@ function TrackingScreen() {
             </div>
             <PartyArrow from={tripOrigin(selected)?.activity ?? selected.record} to={destination(selected)} className="text-sm" />
             <TripFlags trip={selected} />
-            {link && <GoogleMapsLink origin={link.origin} destination={link.destination} via={link.via} className="w-full" />}
 
             {track.length > 1 && at && (
               <div className="rounded-xl bg-card p-3 ring-1 ring-(--glass-edge)">

@@ -3,12 +3,9 @@ import {
   Check,
   ChevronRight,
   Coins,
-  Factory,
   Leaf,
   Mountain,
-  ScanSearch,
   ShieldAlert,
-  TrendingUp,
   type LucideIcon,
 } from "lucide-react"
 import { Link } from "react-router"
@@ -16,7 +13,7 @@ import { Link } from "react-router"
 import { CityTag, ClassBadge, ScoreBar, SegmentBar, TripFlags } from "@/components/data-display"
 import { PageHeader } from "@/components/page-header"
 import { Panel } from "@/components/panel"
-import { StatusPill, type Tone } from "@/components/status-pill"
+import { StatusPill } from "@/components/status-pill"
 import { buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -30,6 +27,7 @@ import {
   suspiciousTrips,
 } from "@/data"
 import type { Opportunity, Trip } from "@/data/types"
+import { AGENT_INFO, type AgentInfo } from "@/lib/agents"
 import { arCount, fmt, fmtInt, fmtQty, fmtSar } from "@/lib/format"
 import { PAGES } from "@/lib/nav"
 import { cn } from "@/lib/utils"
@@ -84,26 +82,26 @@ const KPIS: {
   },
 ]
 
-const gap = COMP.generation.find((g) => g.class === "Hazardous" && g.declared === 0)
-
-const AGENTS: { name: string; icon: LucideIcon; status: { label: string; tone: Tone }; result: string }[] = [
+/** The same three agents as the الوكلاء tab (lib/agents.ts), each with its headline result. */
+const AGENTS: { info: AgentInfo; result: string }[] = [
   {
-    name: "وكيل المصنع",
-    icon: Factory,
-    status: { label: "يعمل", tone: "running" },
+    info: AGENT_INFO.procurement,
     result: `${fmtInt(S.feasible)} من ${fmtInt(S.pairs)} فرص مجدية`,
   },
   {
-    name: "وكيل التصنيف",
-    icon: ScanSearch,
-    status: { label: "اكتمل", tone: "done" },
+    info: AGENT_INFO.classification,
     result: `${fmtInt(COMP.records.filter((r) => r.misdeclared).length)} سجلات أخطر من المعلن`,
   },
   {
-    name: "وكيل التنبؤ",
-    icon: TrendingUp,
-    status: { label: "تنبيه", tone: "malfunction" },
-    result: gap ? `فجوة إفصاح: ${fmt(gap.expected)} طن خطرة` : "لا فجوات",
+    info: AGENT_INFO.tracking,
+    result: arCount(suspiciousTrips.length, {
+      zero: "لا رحلات مشبوهة",
+      one: "رحلة مشبوهة",
+      two: "رحلتان مشبوهتان",
+      few: "# رحلات مشبوهة",
+      many: "# رحلة مشبوهة",
+      other: "# رحلة مشبوهة",
+    }),
   },
 ]
 
@@ -161,8 +159,8 @@ export default function DashboardPage() {
 
       <Panel className="mt-5 bg-card/55" title="وكلاء ريفاكت" aside={<StatusPill label="يعمل" tone="running" />} bodyClassName="gap-4">
         <ul className="grid gap-3 md:grid-cols-3">
-          {AGENTS.map((agent) => (
-            <AgentCard key={agent.name} {...agent} />
+          {AGENTS.map(({ info, result }) => (
+            <AgentCard key={info.name} {...info} result={result} />
           ))}
         </ul>
         <ol className="grid grid-cols-2 gap-3 xl:grid-cols-4">
@@ -234,7 +232,7 @@ function PanelLink({ to, label }: { to: string; label: string }) {
   )
 }
 
-function AgentCard({ name, icon: Icon, status, result }: (typeof AGENTS)[number]) {
+function AgentCard({ name, icon: Icon, status, result }: AgentInfo & { result: string }) {
   return (
     <li className="flex items-center gap-3 rounded-xl bg-card p-3.5 ring-1 ring-(--glass-edge)">
       <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">

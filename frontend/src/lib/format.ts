@@ -34,6 +34,15 @@ export function arCount(n: number, forms: Record<Intl.LDMLPluralRule, string>) {
   return forms[plural.select(n)].replace("#", fmtInt(n))
 }
 export const fmtSar = (n: number) => `${fmtInt(n)} ريال`
+
+/** A driving time: "16 د", or "2 س 15 د" from an hour up. */
+export function fmtDrive(seconds: number) {
+  const minutes = Math.max(1, Math.round(seconds / 60))
+  if (minutes < 60) return `${fmtInt(minutes)} د`
+  const hours = Math.floor(minutes / 60)
+  const rest = minutes % 60
+  return rest === 0 ? `${fmtInt(hours)} س` : `${fmtInt(hours)} س ${fmtInt(rest)} د`
+}
 export const fmtPct = (x: number) => `${Math.round(x * 100)}%`
 
 /** "1.2 مليون" from 1,234,567: large money reads better rounded. */

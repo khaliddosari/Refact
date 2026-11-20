@@ -1,11 +1,10 @@
 import { FitBounds, MapView } from "@/components/maps/map-view"
-import { FactoryPin, type PinRole } from "@/components/maps/pins"
-import { RoadLine } from "@/components/maps/road-line"
-import { SYM, factoryByKey } from "@/data"
+import { FactoryPin, RouteBubble, type PinRole } from "@/components/maps/pins"
+import { AreaLayers, RouteLines, RouteOverlay, type Area, type RouteLine } from "@/components/maps/route-layers"
+import { SYM, byproductById, factoryByKey } from "@/data"
+import { outlineFor, routeFor } from "@/data/map"
 import type { Opportunity } from "@/data/types"
-import { useRoadRoutes, type RouteRequest } from "@/hooks/use-road-routes"
-import { MAP } from "@/lib/map-colors"
-import { boundsOf, type LatLng } from "@/lib/roads"
+import { boundsOf, distance, pointAlong, type LatLng, type RoadRoute } from "@/lib/roads"
 
 /** A factory's position. A factory that did not consent has none, so its exchanges are never drawn. */
 function at(key: string): LatLng | null {
@@ -16,13 +15,6 @@ function at(key: string): LatLng | null {
 const PLACED = SYM.factories.flatMap((f) => (f.lat != null && f.lon != null ? [{ factory: f, at: { lat: f.lat, lng: f.lon } }] : []))
 const ALL = boundsOf(PLACED.map((p) => p.at))
 const MAX_VALUE = Math.max(...SYM.opportunities.map((o) => o.netValue))
-
-/** Module level, so the road routes are requested once. */
-const REQUESTS: RouteRequest[] = SYM.opportunities.flatMap((o) => {
-  const a = at(o.supplier)
-  const b = at(o.receiver)
-  return a && b ? [{ id: o.id, stops: [a, b] }] : []
-})
 
 /** Each factory's segment: supplier, receiver, both, or in no exchange. */
 const ROLES = new Map<string, PinRole>()
@@ -39,15 +31,21 @@ function opportunityOf(key: string) {
   return [...mine].sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99))[0]
 }
 
+/** Heat and treated water go by pipe, not by truck: they have no road route and are drawn straight. */
+function kindOf(o: Opportunity): "drive" | "heat" | "water" {
+  const family = byproductById.get(o.byproduct)?.family
+  return family === "energy" ? "heat" : family === "water" ? "water" : "drive"
+}
+
 /**
  * The factories in the city and the exchanges between them, drawn along the
- * real roads. A line's thickness is its monthly value (quantities come in
- * tonnes, cubic metres and MWh, so value is the comparable measure); a dashed
- * line is an exchange the agent rejected.
+ * real roads (a straight line for a pipe). A line's thickness is its monthly
+ * value (quantities come in tonnes, cubic metres and MWh, so value is the
+ * comparable measure); a dashed line is an exchange the agent rejected.
  *
- * Selecting an exchange highlights its two factories (named, pulsing, in the
- * leaf colour), lights its route with arrows from supplier to receiver, and
- * pushes every other factory and route back.
+ * Selecting an exchange lights its route the way Google lights one (dark
+ * casing, traffic, a bubble with the time and distance), outlines the two
+ * factories with a dotted red line, names them, and pushes the rest back.
  */
 export function SymbiosisMap({
   selectedId,
@@ -58,32 +56,73 @@ export function SymbiosisMap({
   onSelect: (id: string) => void
   className?: string
 }) {
-  const routes = useRoadRoutes(REQUESTS)
   const selected = SYM.opportunities.find((o) => o.id === selectedId)
+  const road = selected ? routeFor(selected.id) : undefined
+  const a = selected ? at(selected.supplier) : null
+  const b = selected ? at(selected.receiver) : null
+
+  // No useMemo: the React Compiler keeps these stable while their inputs are.
+  const lines: RouteLine[] = SYM.opportunities.flatMap((o) => {
+    const from = at(o.supplier)
+    const to = at(o.receiver)
+    if (!from || !to) return []
+    return [
+      {
+        id: o.id,
+        path: routeFor(o.id)?.path ?? [from, to],
+        look: !o.feasible ? (o.compliant ? "rejected" : "forbidden") : "route",
+        state: o.id === selectedId ? "selected" : selectedId ? "dimmed" : "idle",
+        width: o.feasible ? 2.5 + 3.5 * Math.sqrt(o.netValue / MAX_VALUE) : 3,
+      } satisfies RouteLine,
+    ]
+  })
+
+  const outlines: Area[] = selected
+    ? [selected.supplier, selected.receiver].flatMap((key) => {
+        const ring = outlineFor(key)
+        return ring ? [{ id: key, ring, look: "outline" as const }] : []
+      })
+    : []
 
   let focus = ALL
   if (selected) {
-    const a = at(selected.supplier)
-    const b = at(selected.receiver)
-    const road = routes[selected.id]
     if (road) focus = boundsOf(road.path)
     else if (a && b) focus = boundsOf([a, b])
   }
 
+  // What lights up with the selected exchange: a road route, or for a pipe the
+  // straight line between the two factories (its chevrons show the direction).
+  const lit: RoadRoute | null =
+    selected?.feasible && a && b
+      ? (road ?? { path: [a, b], legs: [], distanceMeters: distance(a, b), durationSeconds: 0, traffic: [] })
+      : null
+  // The bubble: a road's time and distance, or a pipe's length.
+  const bubble =
+    selected && lit
+      ? {
+          at: pointAlong(lit.path, 0.5),
+          meters: lit.distanceMeters,
+          seconds: road ? lit.durationSeconds : undefined,
+          kind: kindOf(selected),
+        }
+      : null
+
   return (
-    <MapView bounds={ALL} label="خريطة التكافل الصناعي في المدينة" className={className}>
+    <MapView
+      bounds={ALL}
+      label="خريطة التكافل الصناعي في المدينة"
+      className={className}
+      interactiveLayerIds={["routes-hit"]}
+      onClick={(e) => {
+        const id = e.features?.[0]?.properties?.id
+        if (typeof id === "string") onSelect(id)
+      }}
+    >
       <FitBounds {...focus} />
 
-      {SYM.opportunities.map((o) => (
-        <ExchangeLine
-          key={o.id}
-          opportunity={o}
-          road={routes[o.id]}
-          selected={o.id === selectedId}
-          dimmed={!!selected && o.id !== selectedId}
-          onSelect={onSelect}
-        />
-      ))}
+      <AreaLayers areas={outlines} />
+      <RouteLines lines={lines} />
+      {lit && <RouteOverlay route={lit} />}
 
       {PLACED.map(({ factory: f, at: position }) => {
         const involved = !!selected && (selected.supplier === f.key || selected.receiver === f.key)
@@ -101,38 +140,8 @@ export function SymbiosisMap({
           />
         )
       })}
-    </MapView>
-  )
-}
 
-function ExchangeLine({
-  opportunity: o,
-  road,
-  selected,
-  dimmed,
-  onSelect,
-}: {
-  opportunity: Opportunity
-  /** undefined while loading, null if Google could not route it */
-  road: { path: LatLng[] } | null | undefined
-  selected: boolean
-  dimmed: boolean
-  onSelect: (id: string) => void
-}) {
-  const a = at(o.supplier)
-  const b = at(o.receiver)
-  if (!a || !b || road === undefined) return null
-  return (
-    <RoadLine
-      path={road?.path ?? [a, b]}
-      color={!o.feasible ? (o.compliant ? MAP.stone : MAP.red) : selected ? MAP.leaf : MAP.primary}
-      weight={o.feasible ? 3 + 8 * Math.sqrt(o.netValue / MAX_VALUE) : selected ? 5 : 3}
-      opacity={dimmed ? 0.22 : 0.92}
-      dashed={!o.feasible}
-      highlighted={selected && o.feasible}
-      arrows={selected && o.feasible}
-      zIndex={selected ? 20 : 2}
-      onClick={() => onSelect(o.id)}
-    />
+      {bubble && <RouteBubble {...bubble} />}
+    </MapView>
   )
 }

@@ -1,9 +1,9 @@
-import { ArrowRight, PackageSearch, Radar, ScanSearch, type LucideIcon } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { useId, type ReactNode } from "react"
 
 import { CityTag, ClassBadge, PartyArrow, TripFlags } from "@/components/data-display"
 import { PageHeader } from "@/components/page-header"
-import { StatusPill, type Tone } from "@/components/status-pill"
+import { StatusPill } from "@/components/status-pill"
 import { Card } from "@/components/ui/card"
 import {
   COMP,
@@ -17,6 +17,7 @@ import {
   suspiciousTrips,
 } from "@/data"
 import type { Opportunity, WasteRecord } from "@/data/types"
+import { AGENT_INFO, type AgentInfo } from "@/lib/agents"
 import { fmt, fmtInt, fmtPct } from "@/lib/format"
 import { PAGES } from "@/lib/nav"
 import { cn } from "@/lib/utils"
@@ -38,12 +39,9 @@ type Finding = {
   alert?: boolean
 }
 
-type Agent = {
+/** An agent's name, goal, icon and status (lib/agents.ts), with the figures the card shows. */
+type Agent = AgentInfo & {
   id: string
-  name: string
-  goal: string
-  icon: LucideIcon
-  status: { label: string; tone: Tone }
   /** The industrial city whose data the agent works on. */
   city: string
   stats: Stat[]
@@ -80,10 +78,7 @@ function ClassShift({ from, to }: { from: WasteRecord["declared"]; to: WasteReco
 const AGENTS: Agent[] = [
   {
     id: "procurement",
-    name: "وكيل المشتريات",
-    goal: "يؤمّن المواد الخام من مخلفات مصانع مجاورة",
-    icon: PackageSearch,
-    status: { label: "يعمل", tone: "running" },
+    ...AGENT_INFO.procurement,
     city: SYM.city,
     stats: [
       { value: fmtInt(S.feasible), unit: `من ${fmtInt(S.pairs)}`, label: "فرص مجدية" },
@@ -99,10 +94,7 @@ const AGENTS: Agent[] = [
   },
   {
     id: "classification",
-    name: "وكيل التصنيف",
-    goal: "يصنّف المخلفات ويكشف الخطرة غير المعلنة",
-    icon: ScanSearch,
-    status: { label: "اكتمل", tone: "done" },
+    ...AGENT_INFO.classification,
     city: COMP.city,
     stats: [
       { value: fmtInt(COMP.records.length), label: "سجلات" },
@@ -119,10 +111,7 @@ const AGENTS: Agent[] = [
   },
   {
     id: "tracking",
-    name: "وكيل التتبع",
-    goal: "يتتبع شاحنات النقل ويكشف المخالفات",
-    icon: Radar,
-    status: { label: "تنبيه", tone: "malfunction" },
+    ...AGENT_INFO.tracking,
     city: COMP.city,
     stats: [
       { value: fmtInt(COMP.trips.length), label: "رحلات" },
