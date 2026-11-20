@@ -24,9 +24,11 @@ import { cn } from "@/lib/utils"
 
 const S = SYM.summary
 
-/** Findings per card. The last one only shows from lg, where three cards sit side by side with room to spare. */
-const FINDINGS = 4
-const PHONE_FINDINGS = 3
+/**
+ * Findings per card. A phone shows three and lg four; from desk the list shows
+ * as many as fit the card's height (desk:fit-rows), up to this many.
+ */
+const FINDINGS = 7
 
 type Stat = { value: string; unit?: string; label: string; alert?: boolean }
 
@@ -46,10 +48,6 @@ type Agent = AgentInfo & {
   city: string
   stats: Stat[]
   findings: Finding[]
-}
-
-function materialOf(o: Opportunity) {
-  return materialByCode.get(byproductById.get(o.byproduct)?.material ?? "")?.nameAr ?? o.byproduct
 }
 
 /**
@@ -139,9 +137,9 @@ export default function AgentsPage() {
       <PageHeader icon={item.icon} title={item.label} />
       {/* grid-cols-1 (a minmax(0,1fr) track), not an auto track: an auto track
           grows to the widest unbreakable line inside a card and overflows a phone */}
-      <ul className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+      <ul className="grid grid-cols-1 gap-5 lg:grid-cols-3 desk:min-h-0 desk:flex-1 desk:grid-rows-[minmax(0,1fr)] desk:gap-4">
         {AGENTS.map((agent) => (
-          <li key={agent.id} className="flex min-w-0">
+          <li key={agent.id} className="flex min-w-0 desk:min-h-0">
             <AgentCard agent={agent} />
           </li>
         ))}
@@ -157,12 +155,12 @@ function AgentCard({ agent }: { agent: Agent }) {
     <Card
       role="group"
       aria-labelledby={headingId}
-      className="min-w-0 flex-1 gap-4 bg-card p-4 shadow-(--glass-shadow) ring-(--glass-edge) backdrop-blur-xl backdrop-saturate-150 sm:p-5"
+      className="min-w-0 flex-1 gap-4 bg-card p-4 shadow-(--glass-shadow) ring-(--glass-edge) backdrop-blur-xl backdrop-saturate-150 sm:p-5 desk:min-h-0 desk:gap-3 desk:p-4"
     >
-      <header className="flex flex-col gap-2">
+      <header className="flex shrink-0 flex-col gap-2 desk:gap-1.5">
         <div className="flex items-center gap-3">
-          <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-(--glass-shadow) ring-1 ring-white/10">
-            <Icon aria-hidden="true" className="size-6" />
+          <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-(--glass-shadow) ring-1 ring-white/10 desk:size-10">
+            <Icon aria-hidden="true" className="size-6 desk:size-5" />
           </span>
           <h2 id={headingId} className="min-w-0 flex-1 text-lg leading-snug font-bold">
             {agent.name}
@@ -173,7 +171,7 @@ function AgentCard({ agent }: { agent: Agent }) {
         <p className="text-sm text-balance text-muted-foreground lg:min-h-13 xl:min-h-0">{agent.goal}</p>
       </header>
 
-      <dl className="grid grid-cols-3 divide-x divide-primary/12 rounded-xl bg-secondary/55 py-3 ring-1 ring-primary/8">
+      <dl className="grid shrink-0 grid-cols-3 divide-x divide-primary/12 rounded-xl bg-secondary/55 py-3 ring-1 ring-primary/8 desk:py-2">
         {agent.stats.map((stat) => (
           <div key={stat.label} className="flex min-w-0 flex-col items-center gap-1.5 px-1 text-center">
             <dd className="order-1 flex flex-wrap items-baseline justify-center gap-x-1">
@@ -187,14 +185,21 @@ function AgentCard({ agent }: { agent: Agent }) {
         ))}
       </dl>
 
-      <section aria-label="أهم النتائج" className="flex flex-col">
-        <div className="flex items-center justify-between gap-2 border-b border-primary/12 pb-2">
+      <section aria-label="أهم النتائج" className="flex flex-col desk:min-h-0 desk:flex-1">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-primary/12 pb-2 desk:pb-1.5">
           <h3 className="text-sm font-bold">أهم النتائج</h3>
           <CityTag city={agent.city} />
         </div>
-        <ol className="divide-y divide-primary/10">
+        <ol className="divide-y divide-primary/10 desk:min-h-0 desk:flex-1 desk:fit-rows">
           {agent.findings.map((finding, i) => (
-            <li key={finding.key} className={cn("flex items-center gap-3 py-2.5", i >= PHONE_FINDINGS && "max-lg:hidden")}>
+            <li
+              key={finding.key}
+              className={cn(
+                "flex items-center gap-3 py-2.5 desk:py-2",
+                i === 3 && "max-lg:hidden",
+                i > 3 && "not-desk:hidden"
+              )}
+            >
               <span
                 aria-hidden="true"
                 className={cn(

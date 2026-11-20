@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-Builds src/data/map-data.json: everything the two map screens draw that is not
+Builds src/data/map-data.json: everything the tracking map draws that is not
 the basemap, worked out once here so the app needs no routing service at run time.
 
-  routes     A driving route for each exchange that goes by truck, each trip's
-             expected leg (facility to site), and the recorded GPS track snapped
-             to the roads. Geometry is OSRM's, on OpenStreetMap data. Each carries
-             its length, its time, and the stretches drawn orange and red.
-  outlines   A polygon around each factory and facility: the block of roads it
-             stands in, or an octagon where the roads do not close round it.
-             These are the dotted red outlines. The roads come from the same
-             OpenStreetMap vector tiles the basemap draws (OpenFreeMap).
+  routes     Each trip's expected leg (facility to site), and the recorded GPS
+             track snapped to the roads. Geometry is OSRM's, on OpenStreetMap
+             data. Each carries its length, its time, and the stretches drawn
+             orange and red.
+  outlines   A polygon around each producing facility: the block of roads it
+             stands in, or a plot-shaped rectangle where the roads do not close
+             round it. These are the dotted red outlines. The roads come from the
+             same OpenStreetMap vector tiles the basemap draws (OpenFreeMap).
 
 Traffic is illustrative. There is no live traffic source in the data pack, so
 the orange and red stretches are picked per route by a seeded generator, only on
@@ -50,10 +50,6 @@ UA = "refact-demo-build/1.0 (one-off build script)"
 OSRM = "https://router.project-osrm.org"
 TILEJSON = "https://tiles.openfreemap.org/planet"
 TILE_ZOOM = 14  # the highest zoom the tiles are cut at
-
-# Exchanges that are not trucked: heat and treated water move by pipe, so the
-# app draws them as straight lines and they get no road route.
-PIPED = {"energy", "water"}
 
 # Traffic levels: 1 slow (orange), 2 heavy (red); time on the stretch is
 # multiplied by these.
@@ -521,26 +517,13 @@ def outline_for(key: str, lat: float, lon: float):
 
 def main() -> int:
     data = json.loads(DATA.read_text("utf-8"))
-    sym, comp = data["symbiosis"], data["compliance"]
+    comp = data["compliance"]
 
-    factories = {f["key"]: (f["lat"], f["lon"]) for f in sym["factories"] if f["lat"] is not None and f["lon"] is not None}
-    families = {b["id"]: b["family"] for b in sym["byproducts"]}
     facilities = {f["id"]: (f["lat"], f["lon"]) for f in comp["facilities"]}
     sites = {s["id"]: (s["lat"], s["lon"]) for s in comp["sites"]}
     records = {r["id"]: r for r in comp["records"]}
 
     routes: dict[str, dict] = {}
-
-    log("exchanges")
-    for o in sym["opportunities"]:
-        a, b = factories.get(o["supplier"]), factories.get(o["receiver"])
-        if not a or not b:
-            continue
-        if families.get(o["byproduct"]) in PIPED:
-            log(f"  {o['id']}: by pipe, no road route")
-            continue
-        routes[o["id"]] = route_record(o["id"], a, b, osrm_route([a, b]))
-        log(f"  {o['id']}: {routes[o['id']]['m'] / 1000:.1f} km, {routes[o['id']]['s'] / 60:.0f} min, traffic {routes[o['id']].get('traffic', [])}")
 
     log("trips")
     for t in comp["trips"]:
@@ -598,7 +581,7 @@ def main() -> int:
 
     log("outlines")
     outlines: dict[str, list[list[float]]] = {}
-    for key, (lat, lon) in {**factories, **facilities}.items():
+    for key, (lat, lon) in facilities.items():
         ring, origin = outline_for(key, lat, lon)
         outlines[key] = ring
         log(f"  {key}: {origin}, {len(ring)} points")

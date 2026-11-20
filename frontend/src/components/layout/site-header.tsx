@@ -15,7 +15,7 @@ import { CURRENT_USER } from "@/lib/site"
  */
 export function SiteHeader() {
   return (
-    <header className="relative z-40 px-3 pt-3 sm:px-4 lg:sticky lg:top-0 lg:pt-4">
+    <header className="relative z-40 px-3 pt-3 sm:px-4 lg:sticky lg:top-0 lg:pt-4 desk:static desk:shrink-0 desk:pt-3">
       <div className="mx-auto max-w-[112rem] rounded-2xl bg-forest text-forest-foreground shadow-(--forest-shadow) ring-1 ring-(--forest-edge) backdrop-blur-xl backdrop-saturate-150">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2.5 px-3 py-2.5 sm:px-4 lg:grid-cols-[1fr_auto_1fr]">
           <Logo className="justify-self-start" />

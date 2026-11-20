@@ -196,9 +196,9 @@
   --text-lg--line-height: 1.5;
 }
 
-/* Console breakpoints (from the house style), for the map and tracking
-   screens: they test height as well as width, because a wide but short
-   laptop window cannot hold two rows of panels. */
+/* Console breakpoints (from the house style): from desk the page is exactly
+   the window and nothing scrolls. They test height as well as width, because a
+   wide but short laptop window cannot hold two rows of panels. */
 @custom-variant desk {
   @media (min-width: 80rem) and (min-height: 40rem) {
     @slot;
@@ -507,6 +507,22 @@ body::before {
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+/* A list that shows only the rows that fit its height: what does not fit wraps
+   into a second column, which the box clips, so a row is never cut in half. The
+   list needs a definite height (flex-1 and min-h-0 in a locked column); use it
+   as desk:fit-rows. */
+@utility fit-rows {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow: hidden;
+  & > * {
+    flex: none;
+    width: 100%;
   }
 }
 

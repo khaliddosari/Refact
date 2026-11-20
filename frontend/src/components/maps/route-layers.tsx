@@ -39,8 +39,8 @@ const widthBy = (key: string): ExpressionSpecification =>
 
 /* Routes */
 
-export type RouteLook = "route" | "alert" | "muted" | "rejected" | "forbidden"
-export type RouteState = "idle" | "selected" | "dimmed"
+type RouteLook = "route" | "alert" | "muted"
+type RouteState = "idle" | "selected" | "dimmed"
 
 export type RouteLine = {
   /** Reported by a click on the line (a feature's `id` property). */
@@ -52,19 +52,16 @@ export type RouteLine = {
   width?: number
 }
 
-const LOOKS: Record<RouteLook, { color: string; dashed: boolean; opacity: number }> = {
-  route: { color: MAP.route, dashed: false, opacity: 0.78 },
-  alert: { color: MAP.red, dashed: false, opacity: 0.7 },
-  muted: { color: "#8c98a4", dashed: false, opacity: 0.8 },
-  rejected: { color: "#8c98a4", dashed: true, opacity: 0.9 },
-  forbidden: { color: MAP.red, dashed: true, opacity: 0.9 },
+const LOOKS: Record<RouteLook, { color: string; opacity: number }> = {
+  route: { color: MAP.route, opacity: 0.78 },
+  alert: { color: MAP.red, opacity: 0.7 },
+  muted: { color: "#8c98a4", opacity: 0.8 },
 }
 
 function routeFeature(line: RouteLine): Feature<LineString> {
   const look = LOOKS[line.look]
-  // A selected route takes the Google route look; a dashed one keeps its own
-  // colour (it is a route not to take) and only grows.
-  const lit = line.state === "selected" && !look.dashed
+  // A selected route takes the Google route look: indigo with a dark casing.
+  const lit = line.state === "selected"
   const base = line.width ?? 3.5
   return {
     type: "Feature",
@@ -73,11 +70,10 @@ function routeFeature(line: RouteLine): Feature<LineString> {
       id: line.id,
       color: lit ? MAP.route : look.color,
       casing: lit ? MAP.routeCasing : "",
-      w: lit ? 8 : line.state === "selected" ? base + 2.5 : line.state === "dimmed" ? base * 0.8 : base,
+      w: lit ? 8 : line.state === "dimmed" ? base * 0.8 : base,
       cw: lit ? 11.5 : 0,
-      opacity: line.state === "selected" ? 1 : line.state === "dimmed" ? 0.22 : look.opacity,
-      dash: look.dashed,
-      z: line.state === "selected" ? 30 : line.state === "idle" ? 10 : 5,
+      opacity: lit ? 1 : line.state === "dimmed" ? 0.22 : look.opacity,
+      z: lit ? 30 : line.state === "idle" ? 10 : 5,
     },
   }
 }
@@ -102,22 +98,8 @@ export function RouteLines({ lines }: { lines: RouteLine[] }) {
         id="routes-solid"
         type="line"
         beforeId={SLOT}
-        filter={["!", ["get", "dash"]]}
         layout={layout as never}
         paint={{ "line-color": ["get", "color"], "line-width": widthBy("w"), "line-opacity": ["get", "opacity"] }}
-      />
-      <Layer
-        id="routes-dashed"
-        type="line"
-        beforeId={SLOT}
-        filter={["get", "dash"]}
-        layout={{ "line-cap": "butt", "line-join": "round", "line-sort-key": ["get", "z"] }}
-        paint={{
-          "line-color": ["get", "color"],
-          "line-width": widthBy("w"),
-          "line-opacity": ["get", "opacity"],
-          "line-dasharray": [2, 1.6],
-        }}
       />
       {/* A wide invisible copy, so a thin line is easy to hit with a finger */}
       <Layer id="routes-hit" type="line" beforeId={SLOT} layout={{ "line-cap": "round", "line-join": "round" }} paint={{ "line-width": 18, "line-opacity": 0 }} />
@@ -205,7 +187,7 @@ export function RouteOverlay({ route, id = "selected" }: { route: RoadRoute; id?
  * site-selected the geofence of the selected trip's site: dotted red
  * stop          where a vehicle stood still: a red ring
  */
-export type AreaLook = "outline" | "site" | "site-selected" | "stop"
+type AreaLook = "outline" | "site" | "site-selected" | "stop"
 
 export type Area = {
   id: string
