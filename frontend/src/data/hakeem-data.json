@@ -1,0 +1,2364 @@
+{
+ "source": "الحزمة الأولى من البيانات للتحديات 1 إلى 10 (التحديان 06 و07) — بيانات اصطناعية",
+ "symbiosis": {
+  "cities": [
+   {
+    "id": "RUH2",
+    "name": "المدينة الصناعية الثانية بالرياض",
+    "lat": 24.55,
+    "lon": 46.86
+   },
+   {
+    "id": "DMM2",
+    "name": "المدينة الصناعية الثانية بالدمام",
+    "lat": 26.26,
+    "lon": 49.98
+   },
+   {
+    "id": "JED3",
+    "name": "المدينة الصناعية الثالثة بجدة",
+    "lat": 21.33,
+    "lon": 39.25
+   }
+  ],
+  "city": "RUH2",
+  "factories": [
+   {
+    "id": "F-201",
+    "key": "F-201",
+    "name": "مصنع عبوات بلاستيكية",
+    "activity": "عبوات بلاستيكية",
+    "isic": "2220",
+    "lat": 24.55,
+    "lon": 46.86,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-317",
+    "key": "F-317",
+    "name": "مصنع أنابيب ومنصات بلاستيكية",
+    "activity": "أنابيب ومنصات بلاستيكية",
+    "isic": "2220",
+    "lat": 24.5707,
+    "lon": 46.8817,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": null,
+    "key": "F-350",
+    "name": "منشأة لم توافق على مشاركة بياناتها",
+    "activity": null,
+    "isic": null,
+    "lat": null,
+    "lon": null,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": false,
+    "hazLicense": null
+   },
+   {
+    "id": "F-233",
+    "key": "F-233",
+    "name": "مصنع هياكل حديدية",
+    "activity": "تصنيع هياكل حديدية",
+    "isic": "2511",
+    "lat": 24.559,
+    "lon": 46.8304,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-090",
+    "key": "F-090",
+    "name": "مصنع صهر حديد (أفران حثية)",
+    "activity": "صهر حديد (أفران حثية)",
+    "isic": "2410",
+    "lat": 24.6039,
+    "lon": 46.939,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-305",
+    "key": "F-305",
+    "name": "ورشة صيانة أسطول شاحنات",
+    "activity": "ورشة صيانة أسطول شاحنات",
+    "isic": "4520",
+    "lat": 24.5231,
+    "lon": 46.8748,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-412",
+    "key": "F-412",
+    "name": "مصنع إعادة تكرير زيوت (مرخّص)",
+    "activity": "إعادة تكرير زيوت (مرخّص)",
+    "isic": "1920",
+    "lat": 24.4961,
+    "lon": 46.8106,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": "receive_treat: OIL-USED"
+   },
+   {
+    "id": "F-178",
+    "key": "F-178",
+    "name": "مصنع خلطات إسفلتية",
+    "activity": "خلطات إسفلتية",
+    "isic": "2399",
+    "lat": 24.5141,
+    "lon": 46.8896,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-144",
+    "key": "F-144",
+    "name": "مستودع تعبئة أغذية",
+    "activity": "مستودع تعبئة أغذية",
+    "isic": "5210",
+    "lat": 24.5814,
+    "lon": 46.8501,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-366",
+    "key": "F-366",
+    "name": "مصنع ورق وكرتون",
+    "activity": "ورق وكرتون",
+    "isic": "1701",
+    "lat": 24.6219,
+    "lon": 46.9143,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-122",
+    "key": "F-122",
+    "name": "مصنع زجاج (أفران)",
+    "activity": "زجاج (أفران)",
+    "isic": "2310",
+    "lat": 24.541,
+    "lon": 46.8402,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-188",
+    "key": "F-188",
+    "name": "مصنع أغذية (مياه ساخنة)",
+    "activity": "أغذية (مياه ساخنة)",
+    "isic": "1079",
+    "lat": 24.546,
+    "lon": 46.8363,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "STP-RUH2",
+    "key": "STP-RUH2",
+    "name": "محطة معالجة مياه المدينة",
+    "activity": "محطة معالجة مياه المدينة",
+    "isic": "3700",
+    "lat": 24.532,
+    "lon": 46.9193,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-415",
+    "key": "F-415",
+    "name": "مصنع بثق بلاستيك",
+    "activity": "بثق بلاستيك",
+    "isic": "2220",
+    "lat": 24.5186,
+    "lon": 46.8995,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-520",
+    "key": "F-520",
+    "name": "مصنع ألواح جبسية",
+    "activity": "ألواح جبسية",
+    "isic": "2395",
+    "lat": 24.5859,
+    "lon": 46.8007,
+    "city": "RUH2",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   },
+   {
+    "id": "F-610",
+    "key": "F-610",
+    "name": "مصنع إسمنت (خارج المدينة)",
+    "activity": "إسمنت (خارج المدينة)",
+    "isic": "2394",
+    "lat": 24.7117,
+    "lon": 47.1563,
+    "city": "خارج المدينة",
+    "size": "medium",
+    "consent": true,
+    "hazLicense": null
+   }
+  ],
+  "taxonomy": [
+   {
+    "code": "PL-HDPE",
+    "ewc": "12 01 05",
+    "nameAr": "بلاستيك HDPE",
+    "nameEn": "HDPE plastic",
+    "family": "plastics",
+    "hazardous": false,
+    "unit": "t",
+    "canSubstitute": "PL-HDPE|PL-PE-REC",
+    "maxKm": 30
+   },
+   {
+    "code": "PL-LDPE",
+    "ewc": "15 01 02",
+    "nameAr": "أفلام LDPE",
+    "nameEn": "LDPE film",
+    "family": "plastics",
+    "hazardous": false,
+    "unit": "t",
+    "canSubstitute": "PL-LDPE|PL-PE-REC",
+    "maxKm": 30
+   },
+   {
+    "code": "PL-PET",
+    "ewc": "15 01 02",
+    "nameAr": "PET",
+    "nameEn": "PET",
+    "family": "plastics",
+    "hazardous": false,
+    "unit": "t",
+    "canSubstitute": "PL-PET",
+    "maxKm": 30
+   },
+   {
+    "code": "PL-PE-REC",
+    "ewc": null,
+    "nameAr": "حبيبات PE معاد تدويرها",
+    "nameEn": "recycled PE pellets",
+    "family": "plastics",
+    "hazardous": false,
+    "unit": "t",
+    "canSubstitute": null,
+    "maxKm": 50
+   },
+   {
+    "code": "MT-FE",
+    "ewc": "12 01 01",
+    "nameAr": "خردة حديد",
+    "nameEn": "ferrous scrap",
+    "family": "metals",
+    "hazardous": false,
+    "unit": "t",
+    "canSubstitute": "MT-FE",
+    "maxKm": 60
+   },
+   {
+    "code": "MT-AL",
+    "ewc": "12 01 03",
+    "nameAr": "خردة ألمنيوم",
+    "nameEn": "aluminium scrap",
+    "family": "metals",
+    "hazardous": false,
+    "unit": "t",
+    "canSubstitute": "MT-AL",
+    "maxKm": 100
+   },
+   {
+    "code": "PAP-OCC",
+    "ewc": "15 01 01",
+    "nameAr": "كرتون مستعمل",
+    "nameEn": "OCC cardboard",
+    "family": "paper",
+    "hazardous": false,
+    "unit": "t",
+    "canSubstitute": "PAP-OCC",
+    "maxKm": 60
+   },
+   {
+    "code": "OIL-USED",
+    "ewc": "13 02 05*",
+    "nameAr": "زيوت تزييت مستعملة",
+    "nameEn": "used lube oil",
+    "family": "oils",
+    "hazardous": true,
+    "unit": "t",
+    "canSubstitute": "OIL-USED (تكرير مرخص فقط)",
+    "maxKm": 100
+   },
+   {
+    "code": "MIN-GYP",
+    "ewc": "17 08 02",
+    "nameAr": "مخلفات جبسية",
+    "nameEn": "gypsum waste",
+    "family": "minerals",
+    "hazardous": false,
+    "unit": "t",
+    "canSubstitute": "MIN-GYP",
+    "maxKm": 80
+   },
+   {
+    "code": "EN-HEAT",
+    "ewc": null,
+    "nameAr": "حرارة فائضة",
+    "nameEn": "waste heat",
+    "family": "energy",
+    "hazardous": false,
+    "unit": "MWh_th",
+    "canSubstitute": "EN-HEAT",
+    "maxKm": 2
+   },
+   {
+    "code": "WT-TSE",
+    "ewc": null,
+    "nameAr": "مياه معالجة",
+    "nameEn": "treated effluent",
+    "family": "water",
+    "hazardous": false,
+    "unit": "m3",
+    "canSubstitute": "WT-TSE",
+    "maxKm": 15
+   },
+   {
+    "code": "SOLV",
+    "ewc": "14 06 03*",
+    "nameAr": "مذيبات مستعملة",
+    "nameEn": "spent solvents",
+    "family": "chemicals",
+    "hazardous": true,
+    "unit": "t",
+    "canSubstitute": "SOLV (استرجاع مرخص فقط)",
+    "maxKm": 100
+   }
+  ],
+  "qualitySpecs": [
+   {
+    "material": "PL-HDPE",
+    "grade": "A",
+    "contaminationMax": 1,
+    "moistureMax": 0.5,
+    "note": "لون واحد، بلا طباعة"
+   },
+   {
+    "material": "PL-HDPE",
+    "grade": "B",
+    "contaminationMax": 3,
+    "moistureMax": 1,
+    "note": "ألوان مختلطة"
+   },
+   {
+    "material": "PL-HDPE",
+    "grade": "C",
+    "contaminationMax": 8,
+    "moistureMax": 2,
+    "note": "مطبوع/ملوث"
+   },
+   {
+    "material": "PAP-OCC",
+    "grade": "B",
+    "contaminationMax": 5,
+    "moistureMax": 12,
+    "note": "بلا شمع أو بلاستيك"
+   },
+   {
+    "material": "MT-FE",
+    "grade": "B",
+    "contaminationMax": 3,
+    "moistureMax": null,
+    "note": "HMS 80:20"
+   },
+   {
+    "material": "MIN-GYP",
+    "grade": "B",
+    "contaminationMax": 10,
+    "moistureMax": 5,
+    "note": "بلا ورق > 2%"
+   }
+  ],
+  "hazardousRules": [
+   {
+    "material": "OIL-USED",
+    "ewc": "13 02 05*",
+    "transportLicense": "ناقل نفايات خطرة مرخص من موان",
+    "receiverLicense": "منشأة تكرير/معالجة زيوت مرخصة",
+    "manifest": true,
+    "prohibited": "حرق كوقود في منشأة غير مرخصة؛ الخلط بمواد أخرى",
+    "storage": "حاويات محكمة على أرضية عازلة"
+   },
+   {
+    "material": "SOLV",
+    "ewc": "14 06 03*",
+    "transportLicense": "ناقل نفايات خطرة مرخص من موان",
+    "receiverLicense": "منشأة استرجاع مذيبات مرخصة",
+    "manifest": true,
+    "prohibited": "التصريف في الشبكة؛ الحرق المفتوح",
+    "storage": "تهوية ومنع اشتعال"
+   }
+  ],
+  "providers": [
+   {
+    "id": "LP-03",
+    "name": "ناقل نفايات عامة 03",
+    "service": "transport",
+    "materials": [
+     "PL-HDPE",
+     "PAP-OCC",
+     "MIN-GYP",
+     "MT-FE"
+    ],
+    "city": "RUH2",
+    "licenseExpiry": "2026-03-31"
+   },
+   {
+    "id": "LP-07",
+    "name": "ناقل خطرة مرخص 07",
+    "service": "transport",
+    "materials": [
+     "OIL-USED",
+     "SOLV"
+    ],
+    "city": "RUH2",
+    "licenseExpiry": "2026-06-30"
+   },
+   {
+    "id": "LP-11",
+    "name": "مدوّر بلاستيك 11",
+    "service": "recycle",
+    "materials": [
+     "PL-HDPE",
+     "PL-LDPE"
+    ],
+    "city": "RUH2",
+    "licenseExpiry": "2027-01-31"
+   }
+  ],
+  "prices": [
+   {
+    "month": "2025-08-01",
+    "material": "MT-FE",
+    "virgin": null,
+    "secondary": 1447,
+    "source": "Fastmarkets – HMS 1&2 domestic"
+   },
+   {
+    "month": "2025-09-01",
+    "material": "PL-HDPE",
+    "virgin": 3375,
+    "secondary": null,
+    "source": "≈ 900 $/طن HDPE film (Polymerupdate)"
+   },
+   {
+    "month": "2025-09-01",
+    "material": "PL-PE-REC",
+    "virgin": null,
+    "secondary": 2600,
+    "source": "افتراض"
+   },
+   {
+    "month": "2025-09-01",
+    "material": "PAP-OCC",
+    "virgin": null,
+    "secondary": 450,
+    "source": "افتراض"
+   },
+   {
+    "month": "2025-09-01",
+    "material": "MIN-GYP",
+    "virgin": 120,
+    "secondary": null,
+    "source": "افتراض"
+   },
+   {
+    "month": "2025-09-01",
+    "material": "OIL-USED",
+    "virgin": null,
+    "secondary": 900,
+    "source": "افتراض"
+   }
+  ],
+  "manifests": [
+   {
+    "id": "WM-2025-06-0412",
+    "month": "2025-06-01",
+    "byproduct": "BP-201-01",
+    "quantity": 43.2,
+    "unit": "t",
+    "destination": "landfill",
+    "provider": "LP-03",
+    "cost": 5184
+   },
+   {
+    "id": "WM-2025-07-0455",
+    "month": "2025-07-01",
+    "byproduct": "BP-201-01",
+    "quantity": 38.9,
+    "unit": "t",
+    "destination": "landfill",
+    "provider": "LP-03",
+    "cost": 4668
+   },
+   {
+    "id": "WM-2025-06-0420",
+    "month": "2025-06-01",
+    "byproduct": "BP-520-01",
+    "quantity": 412,
+    "unit": "t",
+    "destination": "landfill",
+    "provider": "LP-03",
+    "cost": 32960
+   },
+   {
+    "id": "WM-2025-06-0431",
+    "month": "2025-06-01",
+    "byproduct": "BP-305-01",
+    "quantity": 7.6,
+    "unit": "t",
+    "destination": "treatment",
+    "provider": "LP-07",
+    "cost": 4560
+   },
+   {
+    "id": "WM-2025-06-0433",
+    "month": "2025-06-01",
+    "byproduct": "BP-233-01",
+    "quantity": 118,
+    "unit": "t",
+    "destination": "buyer",
+    "provider": "LP-03",
+    "cost": -135700
+   }
+  ],
+  "exchanges": [
+   {
+    "id": "EX-03",
+    "supplier": "F-233",
+    "receiver": "SCRAP-DEALER",
+    "material": "MT-FE",
+    "start": "2023-02-01",
+    "status": "active",
+    "stopReason": null
+   },
+   {
+    "id": "EX-05",
+    "supplier": "F-144",
+    "receiver": "F-366",
+    "material": "PAP-OCC",
+    "start": "2024-04-01",
+    "status": "stopped",
+    "stopReason": "رطوبة الكرتون عالية في الصيف — رُفضت الشحنات"
+   },
+   {
+    "id": "EX-08",
+    "supplier": "F-201",
+    "receiver": "LP-11",
+    "material": "PL-HDPE",
+    "start": "2024-09-01",
+    "status": "stopped",
+    "stopReason": "توقف المدوّر عن الشراء بعد انخفاض سعر الأولي"
+   }
+  ],
+  "byproducts": [
+   {
+    "id": "BP-201-01",
+    "factory": "F-201",
+    "text": "قصاصات بلاستيك HDPE نظيفة",
+    "quantity": 40,
+    "unit": "t",
+    "quality": "A",
+    "hazardous": false,
+    "declaredEwc": null,
+    "material": "PL-HDPE",
+    "ewc": "12 01 05",
+    "ewcInferred": true,
+    "family": "plastics",
+    "route": "landfill",
+    "routeCost": -120,
+    "frequency": "continuous"
+   },
+   {
+    "id": "BP-122-01",
+    "factory": "F-122",
+    "text": "حرارة فائضة من الأفران",
+    "quantity": 600,
+    "unit": "MWh_th",
+    "quality": null,
+    "hazardous": false,
+    "declaredEwc": null,
+    "material": "EN-HEAT",
+    "ewc": null,
+    "ewcInferred": true,
+    "family": "energy",
+    "route": "discharged",
+    "routeCost": 0,
+    "frequency": "continuous"
+   },
+   {
+    "id": "BP-233-01",
+    "factory": "F-233",
+    "text": "سكراب حديد – قصاصات وبرادة",
+    "quantity": 120,
+    "unit": "t",
+    "quality": "B",
+    "hazardous": false,
+    "declaredEwc": "12 01 01",
+    "material": "MT-FE",
+    "ewc": "12 01 01",
+    "ewcInferred": false,
+    "family": "metals",
+    "route": "sold",
+    "routeCost": 1150,
+    "frequency": "weekly"
+   },
+   {
+    "id": "BP-305-01",
+    "factory": "F-305",
+    "text": "زيت محروق من تغيير زيوت الشاحنات",
+    "quantity": 8,
+    "unit": "t",
+    "quality": null,
+    "hazardous": true,
+    "declaredEwc": null,
+    "material": "OIL-USED",
+    "ewc": "13 02 05*",
+    "ewcInferred": true,
+    "family": "oils",
+    "route": "hazardous_treatment",
+    "routeCost": -600,
+    "frequency": "weekly"
+   },
+   {
+    "id": "BP-144-01",
+    "factory": "F-144",
+    "text": "كراتين تغليف مستعملة (OCC) carton boxes",
+    "quantity": 60,
+    "unit": "t",
+    "quality": "B",
+    "hazardous": false,
+    "declaredEwc": null,
+    "material": "PAP-OCC",
+    "ewc": "15 01 01",
+    "ewcInferred": true,
+    "family": "paper",
+    "route": "landfill",
+    "routeCost": -100,
+    "frequency": "continuous"
+   },
+   {
+    "id": "BP-STP-01",
+    "factory": "STP-RUH2",
+    "text": "مياه صرف معالجة ثلاثياً (فائض)",
+    "quantity": 25000,
+    "unit": "m3",
+    "quality": "tertiary",
+    "hazardous": false,
+    "declaredEwc": null,
+    "material": "WT-TSE",
+    "ewc": null,
+    "ewcInferred": true,
+    "family": "water",
+    "route": "discharged",
+    "routeCost": 0,
+    "frequency": "continuous"
+   },
+   {
+    "id": "BP-520-01",
+    "factory": "F-520",
+    "text": "ألواح وقوالب جبسية تالفة + غبار جبس",
+    "quantity": 300,
+    "unit": "t",
+    "quality": "B",
+    "hazardous": false,
+    "declaredEwc": null,
+    "material": "MIN-GYP",
+    "ewc": "17 08 02",
+    "ewcInferred": true,
+    "family": "minerals",
+    "route": "landfill",
+    "routeCost": -80,
+    "frequency": "continuous"
+   },
+   {
+    "id": "BP-201-02",
+    "factory": "F-201",
+    "text": "نايلون تغليف ملوّن مطبوع",
+    "quantity": 6,
+    "unit": "t",
+    "quality": "C",
+    "hazardous": false,
+    "declaredEwc": null,
+    "material": "PL-LDPE",
+    "ewc": "15 01 02",
+    "ewcInferred": true,
+    "family": "plastics",
+    "route": "landfill",
+    "routeCost": -120,
+    "frequency": "weekly"
+   }
+  ],
+  "needs": [
+   {
+    "id": "ND-317-01",
+    "factory": "F-317",
+    "text": "حبيبات بولي إيثيلين معاد تدويرها",
+    "quantity": 35,
+    "unit": "t",
+    "minQuality": "B",
+    "acceptsSecondary": true,
+    "source": "local_virgin",
+    "price": 3500,
+    "spec": "MFI 0.3–1، رطوبة < 0.5%",
+    "material": "PL-PE-REC",
+    "family": "plastics"
+   },
+   {
+    "id": "ND-415-01",
+    "factory": "F-415",
+    "text": "مياه معالجة للتبريد",
+    "quantity": 900,
+    "unit": "m3",
+    "minQuality": "secondary",
+    "acceptsSecondary": true,
+    "source": "local_virgin",
+    "price": 8.04,
+    "spec": "دائرة تبريد مغلقة",
+    "material": "WT-TSE",
+    "family": "water"
+   },
+   {
+    "id": "ND-350-01",
+    "factory": "F-350",
+    "text": "رقائق PET نظيفة للتشكيل",
+    "quantity": 25,
+    "unit": "t",
+    "minQuality": "A",
+    "acceptsSecondary": true,
+    "source": "import",
+    "price": 3800,
+    "spec": "food-grade",
+    "material": "PL-PET",
+    "family": "plastics"
+   },
+   {
+    "id": "ND-090-01",
+    "factory": "F-090",
+    "text": "خردة حديد HMS للصهر",
+    "quantity": 2000,
+    "unit": "t",
+    "minQuality": "B",
+    "acceptsSecondary": true,
+    "source": "local_secondary",
+    "price": 1450,
+    "spec": "HMS 1&2 80:20",
+    "material": "MT-FE",
+    "family": "metals"
+   },
+   {
+    "id": "ND-412-01",
+    "factory": "F-412",
+    "text": "زيوت تزييت مستعملة للتكرير",
+    "quantity": 300,
+    "unit": "t",
+    "minQuality": null,
+    "acceptsSecondary": true,
+    "source": "local_secondary",
+    "price": 900,
+    "spec": "بلا مياه > 5%",
+    "material": "OIL-USED",
+    "family": "oils"
+   },
+   {
+    "id": "ND-178-01",
+    "factory": "F-178",
+    "text": "زيت وقود للحارق",
+    "quantity": 40,
+    "unit": "t",
+    "minQuality": null,
+    "acceptsSecondary": true,
+    "source": "local_virgin",
+    "price": 1500,
+    "spec": null,
+    "material": null,
+    "family": "oils"
+   },
+   {
+    "id": "ND-366-01",
+    "factory": "F-366",
+    "text": "ورق وكرتون مستعمل للعجن",
+    "quantity": 400,
+    "unit": "t",
+    "minQuality": "B",
+    "acceptsSecondary": true,
+    "source": "import",
+    "price": 450,
+    "spec": "رطوبة < 12%",
+    "material": "PAP-OCC",
+    "family": "paper"
+   },
+   {
+    "id": "ND-188-01",
+    "factory": "F-188",
+    "text": "مياه ساخنة 70°م للتنظيف والطبخ",
+    "quantity": 450,
+    "unit": "MWh_th",
+    "minQuality": null,
+    "acceptsSecondary": true,
+    "source": "local_virgin",
+    "price": 210,
+    "spec": "يعمل بسخانات كهربائية",
+    "material": "EN-HEAT",
+    "family": "energy"
+   },
+   {
+    "id": "ND-610-01",
+    "factory": "F-610",
+    "text": "جبس طبيعي لضبط زمن الشك",
+    "quantity": 500,
+    "unit": "t",
+    "minQuality": "B",
+    "acceptsSecondary": true,
+    "source": "local_virgin",
+    "price": 120,
+    "spec": "SO3 ≥ 40%",
+    "material": "MIN-GYP",
+    "family": "minerals"
+   }
+  ],
+  "opportunities": [
+   {
+    "id": "OP-01",
+    "byproduct": "BP-201-01",
+    "need": "ND-317-01",
+    "supplier": "F-201",
+    "receiver": "F-317",
+    "score": 0.96,
+    "quantity": 35,
+    "unit": "t",
+    "coverage": 1,
+    "distanceKm": 4.1,
+    "maxKm": 30,
+    "materialMatch": 1,
+    "textSimilarity": 0.81,
+    "qualityOk": true,
+    "hazardous": false,
+    "receiverLicensed": null,
+    "valuePerUnit": 2967.52,
+    "netValue": 103863,
+    "co2": 58.77,
+    "landfillDiverted": 35,
+    "currentlyLandfilled": true,
+    "feasible": true,
+    "exclusion": null,
+    "compliant": true,
+    "rank": 1,
+    "similarityRank": 1,
+    "reason": "35 طن/شهر تغطي 100% من الطلب، على بعد 4.1 كم؛ وفر ≈ 103,863 ريال/شهر و58.8 طن CO₂ وتحويل عن الردم"
+   },
+   {
+    "id": "OP-02",
+    "byproduct": "BP-201-01",
+    "need": "ND-350-01",
+    "supplier": "F-201",
+    "receiver": "F-350",
+    "score": 0.3,
+    "quantity": 25,
+    "unit": "t",
+    "coverage": 1,
+    "distanceKm": 5.5,
+    "maxKm": 30,
+    "materialMatch": 0,
+    "textSimilarity": 0.74,
+    "qualityOk": false,
+    "hazardous": false,
+    "receiverLicensed": null,
+    "valuePerUnit": 3266.67,
+    "netValue": 0,
+    "co2": 0,
+    "landfillDiverted": 0,
+    "currentlyLandfilled": true,
+    "feasible": false,
+    "exclusion": "مادة مختلفة",
+    "compliant": true,
+    "rank": null,
+    "similarityRank": 3,
+    "reason": "مستبعدة — لا: مادة مختلفة"
+   },
+   {
+    "id": "OP-03",
+    "byproduct": "BP-233-01",
+    "need": "ND-090-01",
+    "supplier": "F-233",
+    "receiver": "F-090",
+    "score": 0.79,
+    "quantity": 120,
+    "unit": "t",
+    "coverage": 0.06,
+    "distanceKm": 15.7,
+    "maxKm": 60,
+    "materialMatch": 1,
+    "textSimilarity": 0.66,
+    "qualityOk": true,
+    "hazardous": false,
+    "receiverLicensed": null,
+    "valuePerUnit": 244.51,
+    "netValue": 29341,
+    "co2": -0.37,
+    "landfillDiverted": 0,
+    "currentlyLandfilled": false,
+    "feasible": true,
+    "exclusion": null,
+    "compliant": true,
+    "rank": 4,
+    "similarityRank": 6,
+    "reason": "120 طن/شهر تغطي 6% من الطلب، على بعد 15.7 كم؛ وفر ≈ 29,341 ريال/شهر و-0.4 طن CO₂"
+   },
+   {
+    "id": "OP-04",
+    "byproduct": "BP-305-01",
+    "need": "ND-412-01",
+    "supplier": "F-305",
+    "receiver": "F-412",
+    "score": 0.8,
+    "quantity": 8,
+    "unit": "t",
+    "coverage": 0.0267,
+    "distanceKm": 9.3,
+    "maxKm": 100,
+    "materialMatch": 1,
+    "textSimilarity": 0.71,
+    "qualityOk": true,
+    "hazardous": true,
+    "receiverLicensed": true,
+    "valuePerUnit": 1488.84,
+    "netValue": 11911,
+    "co2": 4.79,
+    "landfillDiverted": 0,
+    "currentlyLandfilled": false,
+    "feasible": true,
+    "exclusion": null,
+    "compliant": true,
+    "rank": 6,
+    "similarityRank": 4,
+    "reason": "8 طن/شهر تغطي 3% من الطلب، على بعد 9.3 كم؛ وفر ≈ 11,911 ريال/شهر و4.8 طن CO₂"
+   },
+   {
+    "id": "OP-05",
+    "byproduct": "BP-305-01",
+    "need": "ND-178-01",
+    "supplier": "F-305",
+    "receiver": "F-178",
+    "score": 0.83,
+    "quantity": 8,
+    "unit": "t",
+    "coverage": 0.2,
+    "distanceKm": 2.3,
+    "maxKm": 100,
+    "materialMatch": 1,
+    "textSimilarity": 0.77,
+    "qualityOk": true,
+    "hazardous": true,
+    "receiverLicensed": false,
+    "valuePerUnit": 1997.19,
+    "netValue": 0,
+    "co2": 0,
+    "landfillDiverted": 0,
+    "currentlyLandfilled": false,
+    "feasible": false,
+    "exclusion": "مادة خطرة والمستقبل غير مرخص",
+    "compliant": false,
+    "rank": null,
+    "similarityRank": 2,
+    "reason": "مستبعدة — لا: مادة خطرة والمستقبل غير مرخص"
+   },
+   {
+    "id": "OP-06",
+    "byproduct": "BP-144-01",
+    "need": "ND-366-01",
+    "supplier": "F-144",
+    "receiver": "F-366",
+    "score": 0.81,
+    "quantity": 60,
+    "unit": "t",
+    "coverage": 0.15,
+    "distanceKm": 10.3,
+    "maxKm": 60,
+    "materialMatch": 1,
+    "textSimilarity": 0.69,
+    "qualityOk": true,
+    "hazardous": false,
+    "receiverLicensed": null,
+    "valuePerUnit": 484.87,
+    "netValue": 29092,
+    "co2": 53.88,
+    "landfillDiverted": 60,
+    "currentlyLandfilled": true,
+    "feasible": true,
+    "exclusion": null,
+    "compliant": true,
+    "rank": 5,
+    "similarityRank": 5,
+    "reason": "60 طن/شهر تغطي 15% من الطلب، على بعد 10.3 كم؛ وفر ≈ 29,092 ريال/شهر و53.9 طن CO₂ وتحويل عن الردم"
+   },
+   {
+    "id": "OP-07",
+    "byproduct": "BP-122-01",
+    "need": "ND-188-01",
+    "supplier": "F-122",
+    "receiver": "F-188",
+    "score": 0.92,
+    "quantity": 450,
+    "unit": "MWh",
+    "coverage": 1,
+    "distanceKm": 0.9,
+    "maxKm": 2,
+    "materialMatch": 1,
+    "textSimilarity": 0.58,
+    "qualityOk": true,
+    "hazardous": false,
+    "receiverLicensed": null,
+    "valuePerUnit": 127.92,
+    "netValue": 57566,
+    "co2": 282.6,
+    "landfillDiverted": 0,
+    "currentlyLandfilled": false,
+    "feasible": true,
+    "exclusion": null,
+    "compliant": true,
+    "rank": 2,
+    "similarityRank": 9,
+    "reason": "450 ميغاواط ساعة حرارية/شهر تغطي 100% من الطلب، على بعد 0.9 كم؛ وفر ≈ 57,566 ريال/شهر و282.6 طن CO₂"
+   },
+   {
+    "id": "OP-08",
+    "byproduct": "BP-STP-01",
+    "need": "ND-415-01",
+    "supplier": "STP-RUH2",
+    "receiver": "F-415",
+    "score": 0.92,
+    "quantity": 900,
+    "unit": "m3",
+    "coverage": 1,
+    "distanceKm": 3.2,
+    "maxKm": 15,
+    "materialMatch": 1,
+    "textSimilarity": 0.62,
+    "qualityOk": true,
+    "hazardous": false,
+    "receiverLicensed": null,
+    "valuePerUnit": 7.38,
+    "netValue": 6640,
+    "co2": 1.89,
+    "landfillDiverted": 0,
+    "currentlyLandfilled": false,
+    "feasible": true,
+    "exclusion": null,
+    "compliant": true,
+    "rank": 7,
+    "similarityRank": 8,
+    "reason": "900 م³/شهر تغطي 100% من الطلب، على بعد 3.2 كم؛ وفر ≈ 6,640 ريال/شهر و1.9 طن CO₂"
+   },
+   {
+    "id": "OP-09",
+    "byproduct": "BP-520-01",
+    "need": "ND-610-01",
+    "supplier": "F-520",
+    "receiver": "F-610",
+    "score": 0.87,
+    "quantity": 300,
+    "unit": "t",
+    "coverage": 0.6,
+    "distanceKm": 50.1,
+    "maxKm": 80,
+    "materialMatch": 1,
+    "textSimilarity": 0.64,
+    "qualityOk": true,
+    "hazardous": false,
+    "receiverLicensed": null,
+    "valuePerUnit": 167.47,
+    "netValue": 50241,
+    "co2": 13.84,
+    "landfillDiverted": 300,
+    "currentlyLandfilled": true,
+    "feasible": true,
+    "exclusion": null,
+    "compliant": true,
+    "rank": 3,
+    "similarityRank": 7,
+    "reason": "300 طن/شهر تغطي 60% من الطلب، على بعد 50.1 كم؛ وفر ≈ 50,241 ريال/شهر و13.8 طن CO₂ وتحويل عن الردم"
+   }
+  ],
+  "cards": [
+   {
+    "factory": "F-201",
+    "role": "supplier",
+    "text": "لديك فرصتان: (1) بيع 35 طن/شهر من قصاصات HDPE لمصنع الأنابيب F-317 على بعد ≈ 4 كم بدل دفع 120 ريال/طن للردم — وفر للطرفين ≈ 104 ألف ريال/شهر. (2) نايلون التغليف المطبوع (6 أطنان) يحتاج فرزاً قبل أن يصلح."
+   },
+   {
+    "factory": "F-305",
+    "role": "supplier",
+    "text": "الزيت المستعمل (8 أطنان/شهر) مادة خطرة: يمكن بيعه للمكرر المرخص F-412 عبر الناقل المرخص LP-07 بدل دفع 600 ريال/طن للمعالجة. لا يجوز بيعه لمصنع إسفلت غير مرخص."
+   },
+   {
+    "factory": "F-188",
+    "role": "receiver",
+    "text": "مصنع الزجاج المجاور (< 1 كم) لديه حرارة فائضة تغطي احتياجك من المياه الساخنة بالكامل؛ وفر ≈ 57 ألف ريال/شهر و≈ 280 طن CO₂."
+   }
+  ],
+  "summary": {
+   "pairs": 9,
+   "feasible": 7,
+   "excludedCompliance": 1,
+   "excludedMaterial": 1,
+   "monthlySavings": 288654,
+   "annualSavings": 3463848,
+   "landfillDiverted": 395,
+   "co2": 415.4,
+   "precisionAgent": 1.0,
+   "precisionText": 0.6
+  }
+ },
+ "compliance": {
+  "city": "DMM2",
+  "date": "2025-05-18",
+  "facilities": [
+   {
+    "id": "FC-2207",
+    "city": "DMM2",
+    "activity": "ورشة صيانة شاحنات",
+    "isic": "4520",
+    "lat": 26.2672,
+    "lon": 49.972,
+    "hazGenerator": false,
+    "lastInspection": "2025-02-11",
+    "violations12m": 2
+   },
+   {
+    "id": "FC-2231",
+    "city": "DMM2",
+    "activity": "أغذية",
+    "isic": "1079",
+    "lat": 26.2618,
+    "lon": 49.967,
+    "hazGenerator": false,
+    "lastInspection": "2025-03-04",
+    "violations12m": 0
+   },
+   {
+    "id": "FC-2245",
+    "city": "DMM2",
+    "activity": "صهر ألمنيوم ثانوي وإعادة تدوير بطاريات",
+    "isic": "2420",
+    "lat": 26.2573,
+    "lon": 49.985,
+    "hazGenerator": true,
+    "lastInspection": "2025-04-22",
+    "violations12m": 1
+   },
+   {
+    "id": "FC-2260",
+    "city": "DMM2",
+    "activity": "دهانات وطلاءات",
+    "isic": "2022",
+    "lat": 26.2546,
+    "lon": 49.963,
+    "hazGenerator": true,
+    "lastInspection": "2025-01-15",
+    "violations12m": 3
+   },
+   {
+    "id": "FC-2214",
+    "city": "DMM2",
+    "activity": "بلاط سيراميك",
+    "isic": "2392",
+    "lat": 26.2708,
+    "lon": 49.971,
+    "hazGenerator": true,
+    "lastInspection": "2025-04-01",
+    "violations12m": 0
+   },
+   {
+    "id": "FC-2173",
+    "city": "DMM2",
+    "activity": "هياكل حديدية",
+    "isic": "2511",
+    "lat": 26.2834,
+    "lon": 49.955,
+    "hazGenerator": false,
+    "lastInspection": "2025-03-19",
+    "violations12m": 0
+   }
+  ],
+  "records": [
+   {
+    "id": "R-901",
+    "facility": "FC-2207",
+    "date": "2025-05-18",
+    "text": "براميل زيت مستعمل من تغيير زيوت الشاحنات + خِرق ملوثة",
+    "photo": true,
+    "declared": "General",
+    "tons": 6.5,
+    "declaredEwc": null,
+    "container": "drum",
+    "pHazardous": 0.91,
+    "predicted": "Hazardous",
+    "confidence": 0.91,
+    "review": false,
+    "misdeclared": true,
+    "requirements": "ناقل مرخص «جمع ونقل النفايات الخطرة» + وثيقة نقل إلكترونية + موقع يقبل الخطرة (S-02 أو S-05) + تعبئة محكمة"
+   },
+   {
+    "id": "R-902",
+    "facility": "FC-2231",
+    "date": "2025-05-18",
+    "text": "حمأة رطبة من معالجة مياه المصنع",
+    "photo": false,
+    "declared": "Industrial",
+    "tons": 11,
+    "declaredEwc": null,
+    "container": "bulk",
+    "pHazardous": 0.22,
+    "predicted": "Industrial",
+    "confidence": 0.78,
+    "review": false,
+    "misdeclared": false,
+    "requirements": "ناقل مرخص + وثيقة نقل + مردم صناعي أو تدوير (S-02 / S-03 / S-04)"
+   },
+   {
+    "id": "R-903",
+    "facility": "FC-2245",
+    "date": "2025-05-18",
+    "text": "بطاريات رصاص حمضية تالفة",
+    "photo": true,
+    "declared": "Hazardous",
+    "tons": 15,
+    "declaredEwc": "16 06 01*",
+    "container": "box",
+    "pHazardous": 0.97,
+    "predicted": "Hazardous",
+    "confidence": 0.97,
+    "review": false,
+    "misdeclared": false,
+    "requirements": "ناقل مرخص «جمع ونقل النفايات الخطرة» + وثيقة نقل إلكترونية + موقع يقبل الخطرة (S-02 أو S-05) + تعبئة محكمة"
+   },
+   {
+    "id": "R-904",
+    "facility": "FC-2260",
+    "date": "2025-05-18",
+    "text": "كرتون وبلاستيك تغليف",
+    "photo": true,
+    "declared": "General",
+    "tons": 12.3,
+    "declaredEwc": null,
+    "container": "bulk",
+    "pHazardous": 0.03,
+    "predicted": "General",
+    "confidence": 0.97,
+    "review": false,
+    "misdeclared": false,
+    "requirements": "ناقل نفايات عامة + مردم بلدي أو تدوير (S-01 / S-03)"
+   },
+   {
+    "id": "R-905",
+    "facility": "FC-2260",
+    "date": "2025-05-18",
+    "text": "عبوات دهان فارغة بها بقايا",
+    "photo": false,
+    "declared": "Industrial",
+    "tons": 10,
+    "declaredEwc": null,
+    "container": "skip",
+    "pHazardous": 0.58,
+    "predicted": "Hazardous",
+    "confidence": 0.58,
+    "review": true,
+    "misdeclared": true,
+    "requirements": "ناقل مرخص «جمع ونقل النفايات الخطرة» + وثيقة نقل إلكترونية + موقع يقبل الخطرة (S-02 أو S-05) + تعبئة محكمة"
+   },
+   {
+    "id": "R-906",
+    "facility": "FC-2245",
+    "date": "2025-05-18",
+    "text": "خبث أفران صهر الألمنيوم (dross)",
+    "photo": true,
+    "declared": "Industrial",
+    "tons": 9,
+    "declaredEwc": null,
+    "container": "skip",
+    "pHazardous": 0.35,
+    "predicted": "Hazardous",
+    "confidence": 0.65,
+    "review": true,
+    "misdeclared": true,
+    "requirements": "ناقل مرخص «جمع ونقل النفايات الخطرة» + وثيقة نقل إلكترونية + موقع يقبل الخطرة (S-02 أو S-05) + تعبئة محكمة"
+   },
+   {
+    "id": "R-907",
+    "facility": "FC-2190",
+    "date": "2025-05-18",
+    "text": "نشارة خشب من النجارة",
+    "photo": true,
+    "declared": "General",
+    "tons": 3.2,
+    "declaredEwc": null,
+    "container": "bag",
+    "pHazardous": 0.05,
+    "predicted": "General",
+    "confidence": 0.95,
+    "review": false,
+    "misdeclared": false,
+    "requirements": "ناقل نفايات عامة + مردم بلدي أو تدوير (S-01 / S-03)"
+   },
+   {
+    "id": "R-908",
+    "facility": "FC-2214",
+    "date": "2025-05-18",
+    "text": "مذيبات تنظيف مستعملة (thinner)",
+    "photo": false,
+    "declared": "Hazardous",
+    "tons": 8.5,
+    "declaredEwc": null,
+    "container": "drum",
+    "pHazardous": 0.88,
+    "predicted": "Hazardous",
+    "confidence": 0.88,
+    "review": false,
+    "misdeclared": false,
+    "requirements": "ناقل مرخص «جمع ونقل النفايات الخطرة» + وثيقة نقل إلكترونية + موقع يقبل الخطرة (S-02 أو S-05) + تعبئة محكمة"
+   },
+   {
+    "id": "R-909",
+    "facility": "FC-2173",
+    "date": "2025-05-18",
+    "text": "قصاصات حديد",
+    "photo": true,
+    "declared": "Industrial",
+    "tons": 12,
+    "declaredEwc": "12 01 01",
+    "container": "bulk",
+    "pHazardous": 0.08,
+    "predicted": "Industrial",
+    "confidence": 0.92,
+    "review": false,
+    "misdeclared": false,
+    "requirements": "ناقل مرخص + وثيقة نقل + مردم صناعي أو تدوير (S-02 / S-03 / S-04)"
+   },
+   {
+    "id": "R-910",
+    "facility": "FC-2231",
+    "date": "2025-05-18",
+    "text": "علب أغذية منتهية الصلاحية",
+    "photo": true,
+    "declared": "General",
+    "tons": 2.1,
+    "declaredEwc": null,
+    "container": "box",
+    "pHazardous": 0.33,
+    "predicted": "Hazardous",
+    "confidence": 0.67,
+    "review": true,
+    "misdeclared": true,
+    "requirements": "ناقل مرخص «جمع ونقل النفايات الخطرة» + وثيقة نقل إلكترونية + موقع يقبل الخطرة (S-02 أو S-05) + تعبئة محكمة"
+   }
+  ],
+  "wasteClasses": [
+   {
+    "id": "GN-PACK",
+    "class": "General",
+    "name": "تغليف ورق وبلاستيك",
+    "ewc": "15 01 01 / 15 01 02",
+    "transportLicense": "ناقل نفايات عامة",
+    "allowedSites": [
+     "municipal_landfill",
+     "recycling"
+    ],
+    "container": "أكياس/حاويات",
+    "maxStorageDays": null
+   },
+   {
+    "id": "GN-ORG",
+    "class": "General",
+    "name": "عضوية وأغذية منتهية",
+    "ewc": "02 03 04",
+    "transportLicense": "ناقل نفايات عامة",
+    "allowedSites": [
+     "municipal_landfill",
+     "compost"
+    ],
+    "container": "حاويات مغلقة",
+    "maxStorageDays": 7
+   },
+   {
+    "id": "IN-METAL",
+    "class": "Industrial",
+    "name": "قصاصات وخردة معادن",
+    "ewc": "12 01 01 / 12 01 03",
+    "transportLicense": "ناقل مرخص",
+    "allowedSites": [
+     "recycling",
+     "industrial_landfill"
+    ],
+    "container": "مكشوفة",
+    "maxStorageDays": null
+   },
+   {
+    "id": "IN-SLUDGE",
+    "class": "Industrial",
+    "name": "حمأة غير خطرة",
+    "ewc": "19 08 14",
+    "transportLicense": "ناقل مرخص (صهريج/قلاب محكم)",
+    "allowedSites": [
+     "industrial_landfill"
+    ],
+    "container": "محكمة لمنع التسرب",
+    "maxStorageDays": 30
+   },
+   {
+    "id": "HZ-OIL",
+    "class": "Hazardous",
+    "name": "زيوت مستعملة",
+    "ewc": "13 02 05*",
+    "transportLicense": "جمع ونقل النفايات الخطرة",
+    "allowedSites": [
+     "haz_treatment",
+     "haz_cell"
+    ],
+    "container": "براميل محكمة مع وعاء احتواء",
+    "maxStorageDays": 90
+   },
+   {
+    "id": "HZ-BATT",
+    "class": "Hazardous",
+    "name": "بطاريات رصاص حمضية",
+    "ewc": "16 06 01*",
+    "transportLicense": "جمع ونقل النفايات الخطرة",
+    "allowedSites": [
+     "haz_treatment"
+    ],
+    "container": "حاويات مقاومة للأحماض",
+    "maxStorageDays": 90
+   },
+   {
+    "id": "HZ-SOLV",
+    "class": "Hazardous",
+    "name": "مذيبات مستعملة",
+    "ewc": "14 06 03*",
+    "transportLicense": "جمع ونقل النفايات الخطرة",
+    "allowedSites": [
+     "haz_treatment"
+    ],
+    "container": "براميل محكمة بعيداً عن الحرارة",
+    "maxStorageDays": 90
+   },
+   {
+    "id": "HZ-PAINT",
+    "class": "Hazardous",
+    "name": "عبوات دهان بها بقايا",
+    "ewc": "08 01 11*",
+    "transportLicense": "جمع ونقل النفايات الخطرة",
+    "allowedSites": [
+     "haz_treatment",
+     "haz_cell"
+    ],
+    "container": "محكمة",
+    "maxStorageDays": 90
+   },
+   {
+    "id": "HZ-DROSS",
+    "class": "Hazardous",
+    "name": "خبث وقشور صهر الألمنيوم",
+    "ewc": "10 03 08* / 10 03 15*",
+    "transportLicense": "جمع ونقل النفايات الخطرة",
+    "allowedSites": [
+     "haz_treatment"
+    ],
+    "container": "جافة ومحكمة (تتفاعل مع الماء)",
+    "maxStorageDays": 90
+   }
+  ],
+  "trips": [
+   {
+    "id": "T-5521",
+    "vehicle": "V-102",
+    "record": "R-909",
+    "declared": "Industrial",
+    "predicted": "Industrial",
+    "loaded": 12,
+    "delivered": 11.9,
+    "site": "S-02",
+    "depart": "2025-05-18 08:05",
+    "arrive": "2025-05-18 09:20",
+    "transporter": "TR-02",
+    "stopMinutes": 0,
+    "trackerGapMinutes": 0,
+    "deviation": 0.05,
+    "points": {
+     "weight": 0,
+     "classification": 0,
+     "site": 0,
+     "license": 0,
+     "stop": 0,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 0
+    },
+    "score": 0,
+    "suspicious": false,
+    "rank": null,
+    "droneLinked": false,
+    "gateNet": 11.9,
+    "reasons": []
+   },
+   {
+    "id": "T-5522",
+    "vehicle": "V-104",
+    "record": "R-903",
+    "declared": "Hazardous",
+    "predicted": "Hazardous",
+    "loaded": 8,
+    "delivered": 5.1,
+    "site": "S-02",
+    "depart": "2025-05-18 08:35",
+    "arrive": "2025-05-18 09:50",
+    "transporter": "TR-04",
+    "stopMinutes": 25,
+    "trackerGapMinutes": 0,
+    "deviation": 0.12,
+    "points": {
+     "weight": 30,
+     "classification": 0,
+     "site": 0,
+     "license": 0,
+     "stop": 20,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 0
+    },
+    "score": 75,
+    "suspicious": true,
+    "rank": 4,
+    "droneLinked": false,
+    "gateNet": 5.1,
+    "reasons": [
+     "فرق الوزن 2.9 طن",
+     "توقفت 25 دقيقة خارج النطاقات"
+    ]
+   },
+   {
+    "id": "T-5523",
+    "vehicle": "V-107",
+    "record": "R-901",
+    "declared": "General",
+    "predicted": "Hazardous",
+    "loaded": 6.5,
+    "delivered": 6.4,
+    "site": null,
+    "depart": "2025-05-18 09:05",
+    "arrive": "2025-05-18 10:20",
+    "transporter": "TR-09",
+    "stopMinutes": 40,
+    "trackerGapMinutes": 0,
+    "deviation": 0.22,
+    "points": {
+     "weight": 0,
+     "classification": 30,
+     "site": 25,
+     "license": 25,
+     "stop": 20,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 30
+    },
+    "score": 195,
+    "suspicious": true,
+    "rank": 1,
+    "droneLinked": true,
+    "gateNet": null,
+    "reasons": [
+     "توقفت في مكان رمي معروف ورصد الدرون براميل فيه",
+     "معلنة «عامة» والمتوقع خطرة",
+     "لم تصل موقعاً معتمداً",
+     "المركبة V-107 غير مرخصة للخطرة",
+     "توقفت 40 دقيقة خارج النطاقات"
+    ]
+   },
+   {
+    "id": "T-5524",
+    "vehicle": "V-105",
+    "record": "R-903",
+    "declared": "Hazardous",
+    "predicted": "Hazardous",
+    "loaded": 4,
+    "delivered": 4,
+    "site": "S-05",
+    "depart": "2025-05-18 09:35",
+    "arrive": "2025-05-18 10:50",
+    "transporter": "TR-04",
+    "stopMinutes": 0,
+    "trackerGapMinutes": 0,
+    "deviation": 0.04,
+    "points": {
+     "weight": 0,
+     "classification": 0,
+     "site": 0,
+     "license": 0,
+     "stop": 0,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 0
+    },
+    "score": 0,
+    "suspicious": false,
+    "rank": null,
+    "droneLinked": false,
+    "gateNet": 4,
+    "reasons": []
+   },
+   {
+    "id": "T-5525",
+    "vehicle": "V-112",
+    "record": "R-908",
+    "declared": "Hazardous",
+    "predicted": "Hazardous",
+    "loaded": 6,
+    "delivered": 6,
+    "site": "S-03",
+    "depart": "2025-05-18 10:05",
+    "arrive": "2025-05-18 11:20",
+    "transporter": "TR-04",
+    "stopMinutes": 0,
+    "trackerGapMinutes": 0,
+    "deviation": 0.08,
+    "points": {
+     "weight": 0,
+     "classification": 0,
+     "site": 25,
+     "license": 0,
+     "stop": 0,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 0
+    },
+    "score": 37.5,
+    "suspicious": true,
+    "rank": 5,
+    "droneLinked": false,
+    "gateNet": null,
+    "reasons": [
+     "الموقع S-03 لا يقبل الخطرة"
+    ]
+   },
+   {
+    "id": "T-5526",
+    "vehicle": "V-108",
+    "record": "R-905",
+    "declared": "Industrial",
+    "predicted": "Hazardous",
+    "loaded": 10,
+    "delivered": 10,
+    "site": "S-04",
+    "depart": "2025-05-18 10:35",
+    "arrive": "2025-05-18 11:50",
+    "transporter": "TR-02",
+    "stopMinutes": 5,
+    "trackerGapMinutes": 35,
+    "deviation": 0.38,
+    "points": {
+     "weight": 0,
+     "classification": 30,
+     "site": 25,
+     "license": 25,
+     "stop": 0,
+     "tracker": 15,
+     "deviation": 10,
+     "dumping": 0
+    },
+    "score": 157.5,
+    "suspicious": true,
+    "rank": 3,
+    "droneLinked": false,
+    "gateNet": null,
+    "reasons": [
+     "معلنة «صناعية» والمتوقع خطرة",
+     "الموقع S-04 لا يقبل الخطرة",
+     "المركبة V-108 غير مرخصة للخطرة",
+     "انقطع التتبع 35 دقيقة",
+     "انحراف 38% عن المسار"
+    ]
+   },
+   {
+    "id": "T-5527",
+    "vehicle": "V-118",
+    "record": "R-903",
+    "declared": "Hazardous",
+    "predicted": "Hazardous",
+    "loaded": 3,
+    "delivered": 3,
+    "site": "S-05",
+    "depart": "2025-05-18 11:05",
+    "arrive": "2025-05-18 12:20",
+    "transporter": "TR-11",
+    "stopMinutes": 0,
+    "trackerGapMinutes": 0,
+    "deviation": 0.06,
+    "points": {
+     "weight": 0,
+     "classification": 0,
+     "site": 0,
+     "license": 25,
+     "stop": 0,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 0
+    },
+    "score": 37.5,
+    "suspicious": true,
+    "rank": 6,
+    "droneLinked": false,
+    "gateNet": null,
+    "reasons": [
+     "المركبة V-118 غير مرخصة للخطرة"
+    ]
+   },
+   {
+    "id": "T-5528",
+    "vehicle": "V-101",
+    "record": "R-904",
+    "declared": "General",
+    "predicted": "General",
+    "loaded": 7.2,
+    "delivered": 7.1,
+    "site": "S-01",
+    "depart": "2025-05-18 11:35",
+    "arrive": "2025-05-18 12:50",
+    "transporter": "TR-02",
+    "stopMinutes": 0,
+    "trackerGapMinutes": 0,
+    "deviation": 0.03,
+    "points": {
+     "weight": 0,
+     "classification": 0,
+     "site": 0,
+     "license": 0,
+     "stop": 0,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 0
+    },
+    "score": 0,
+    "suspicious": false,
+    "rank": null,
+    "droneLinked": false,
+    "gateNet": null,
+    "reasons": []
+   },
+   {
+    "id": "T-5529",
+    "vehicle": "V-110",
+    "record": "R-906",
+    "declared": "Industrial",
+    "predicted": "Hazardous",
+    "loaded": 9,
+    "delivered": 9.6,
+    "site": "S-04",
+    "depart": "2025-05-18 12:05",
+    "arrive": "2025-05-18 13:20",
+    "transporter": "TR-09",
+    "stopMinutes": 12,
+    "trackerGapMinutes": 0,
+    "deviation": 0.1,
+    "points": {
+     "weight": 30,
+     "classification": 30,
+     "site": 25,
+     "license": 25,
+     "stop": 0,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 0
+    },
+    "score": 165,
+    "suspicious": true,
+    "rank": 2,
+    "droneLinked": false,
+    "gateNet": 9.6,
+    "reasons": [
+     "زيادة الوزن 0.6 طن (خلط مواد)",
+     "معلنة «صناعية» والمتوقع خطرة",
+     "الموقع S-04 لا يقبل الخطرة",
+     "المركبة V-110 غير مرخصة للخطرة"
+    ]
+   },
+   {
+    "id": "T-5530",
+    "vehicle": "V-101",
+    "record": "R-904",
+    "declared": "General",
+    "predicted": "General",
+    "loaded": 5,
+    "delivered": 4.9,
+    "site": "S-01",
+    "depart": "2025-05-18 12:35",
+    "arrive": "2025-05-18 13:50",
+    "transporter": "TR-02",
+    "stopMinutes": 8,
+    "trackerGapMinutes": 0,
+    "deviation": 0.45,
+    "points": {
+     "weight": 0,
+     "classification": 0,
+     "site": 0,
+     "license": 0,
+     "stop": 0,
+     "tracker": 0,
+     "deviation": 10,
+     "dumping": 0
+    },
+    "score": 10,
+    "suspicious": false,
+    "rank": null,
+    "droneLinked": false,
+    "gateNet": null,
+    "reasons": [
+     "انحراف 45% عن المسار"
+    ]
+   },
+   {
+    "id": "T-5531",
+    "vehicle": "V-102",
+    "record": "R-902",
+    "declared": "Industrial",
+    "predicted": "Industrial",
+    "loaded": 11,
+    "delivered": 10.5,
+    "site": "S-04",
+    "depart": "2025-05-18 13:05",
+    "arrive": "2025-05-18 14:20",
+    "transporter": "TR-02",
+    "stopMinutes": 0,
+    "trackerGapMinutes": 0,
+    "deviation": 0.07,
+    "points": {
+     "weight": 30,
+     "classification": 0,
+     "site": 0,
+     "license": 0,
+     "stop": 0,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 0
+    },
+    "score": 30,
+    "suspicious": true,
+    "rank": 7,
+    "droneLinked": false,
+    "gateNet": null,
+    "reasons": [
+     "فرق الوزن 0.5 طن"
+    ]
+   },
+   {
+    "id": "T-5532",
+    "vehicle": "V-112",
+    "record": "R-908",
+    "declared": "Hazardous",
+    "predicted": "Hazardous",
+    "loaded": 2.5,
+    "delivered": 2.4,
+    "site": "S-05",
+    "depart": "2025-05-18 13:35",
+    "arrive": "2025-05-18 14:50",
+    "transporter": "TR-04",
+    "stopMinutes": 12,
+    "trackerGapMinutes": 0,
+    "deviation": 0.09,
+    "points": {
+     "weight": 0,
+     "classification": 0,
+     "site": 0,
+     "license": 0,
+     "stop": 0,
+     "tracker": 0,
+     "deviation": 0,
+     "dumping": 0
+    },
+    "score": 0,
+    "suspicious": false,
+    "rank": null,
+    "droneLinked": false,
+    "gateNet": null,
+    "reasons": []
+   }
+  ],
+  "gps": [
+   {
+    "vehicle": "V-107",
+    "time": "2025-05-18 13:20",
+    "lat": 26.2672,
+    "lon": 49.972,
+    "speed": 0,
+    "ignition": true,
+    "signal": true
+   },
+   {
+    "vehicle": "V-107",
+    "time": "2025-05-18 13:23",
+    "lat": 26.2618,
+    "lon": 49.982,
+    "speed": 52,
+    "ignition": true,
+    "signal": true
+   },
+   {
+    "vehicle": "V-107",
+    "time": "2025-05-18 13:26",
+    "lat": 26.2546,
+    "lon": 49.991,
+    "speed": 61,
+    "ignition": true,
+    "signal": true
+   },
+   {
+    "vehicle": "V-107",
+    "time": "2025-05-18 13:29",
+    "lat": 26.2465,
+    "lon": 50.004,
+    "speed": 48,
+    "ignition": true,
+    "signal": true
+   },
+   {
+    "vehicle": "V-107",
+    "time": "2025-05-18 13:32",
+    "lat": 26.2455,
+    "lon": 50.0055,
+    "speed": 0,
+    "ignition": true,
+    "signal": true
+   },
+   {
+    "vehicle": "V-107",
+    "time": "2025-05-18 13:52",
+    "lat": 26.2455,
+    "lon": 50.0055,
+    "speed": 0,
+    "ignition": true,
+    "signal": true
+   },
+   {
+    "vehicle": "V-107",
+    "time": "2025-05-18 14:12",
+    "lat": 26.2455,
+    "lon": 50.0055,
+    "speed": 0,
+    "ignition": true,
+    "signal": true
+   },
+   {
+    "vehicle": "V-107",
+    "time": "2025-05-18 14:15",
+    "lat": 26.242,
+    "lon": 50.0091,
+    "speed": 45,
+    "ignition": true,
+    "signal": true
+   },
+   {
+    "vehicle": "V-107",
+    "time": "2025-05-18 14:18",
+    "lat": 26.2366,
+    "lon": 50.0221,
+    "speed": 58,
+    "ignition": true,
+    "signal": true
+   }
+  ],
+  "gpsTrip": "T-5523",
+  "sites": [
+   {
+    "id": "S-01",
+    "name": "مردم بلدي",
+    "lat": 26.2241,
+    "lon": 50.0151,
+    "accepts": [
+     "General"
+    ],
+    "geofenceM": 500,
+    "weighbridge": true
+   },
+   {
+    "id": "S-02",
+    "name": "مردم صناعي بخلية خطرة",
+    "lat": 26.2106,
+    "lon": 50.0601,
+    "accepts": [
+     "Industrial",
+     "Hazardous"
+    ],
+    "geofenceM": 400,
+    "weighbridge": true
+   },
+   {
+    "id": "S-03",
+    "name": "مركز تدوير",
+    "lat": 26.233,
+    "lon": 49.995,
+    "accepts": [
+     "General",
+     "Industrial"
+    ],
+    "geofenceM": 250,
+    "weighbridge": false
+   },
+   {
+    "id": "S-04",
+    "name": "مردم صناعي",
+    "lat": 26.2196,
+    "lon": 49.9199,
+    "accepts": [
+     "Industrial"
+    ],
+    "geofenceM": 450,
+    "weighbridge": true
+   },
+   {
+    "id": "S-05",
+    "name": "مركز معالجة نفايات خطرة",
+    "lat": 26.278,
+    "lon": 50.0802,
+    "accepts": [
+     "Hazardous"
+    ],
+    "geofenceM": 300,
+    "weighbridge": true
+   }
+  ],
+  "vehicles": [
+   {
+    "id": "V-101",
+    "transporter": "TR-02",
+    "type": "tipper",
+    "capacity": 10,
+    "hazLicensed": false,
+    "gps": true
+   },
+   {
+    "id": "V-102",
+    "transporter": "TR-02",
+    "type": "tipper",
+    "capacity": 10,
+    "hazLicensed": false,
+    "gps": true
+   },
+   {
+    "id": "V-104",
+    "transporter": "TR-04",
+    "type": "box",
+    "capacity": 10,
+    "hazLicensed": true,
+    "gps": true
+   },
+   {
+    "id": "V-105",
+    "transporter": "TR-04",
+    "type": "box",
+    "capacity": 10,
+    "hazLicensed": true,
+    "gps": true
+   },
+   {
+    "id": "V-107",
+    "transporter": "TR-09",
+    "type": "tipper",
+    "capacity": 10,
+    "hazLicensed": false,
+    "gps": true
+   },
+   {
+    "id": "V-108",
+    "transporter": "TR-02",
+    "type": "tipper",
+    "capacity": 10,
+    "hazLicensed": false,
+    "gps": false
+   },
+   {
+    "id": "V-110",
+    "transporter": "TR-09",
+    "type": "tipper",
+    "capacity": 10,
+    "hazLicensed": false,
+    "gps": true
+   },
+   {
+    "id": "V-112",
+    "transporter": "TR-04",
+    "type": "box",
+    "capacity": 10,
+    "hazLicensed": true,
+    "gps": true
+   },
+   {
+    "id": "V-118",
+    "transporter": "TR-11",
+    "type": "tipper",
+    "capacity": 10,
+    "hazLicensed": false,
+    "gps": true
+   }
+  ],
+  "transporters": [
+   {
+    "id": "TR-02",
+    "name": "ناقل 02",
+    "licenses": [
+     "general"
+    ],
+    "licenseExpiry": "2026-08-31",
+    "violations12m": 0
+   },
+   {
+    "id": "TR-04",
+    "name": "ناقل 04",
+    "licenses": [
+     "general",
+     "haz_collect_transport"
+    ],
+    "licenseExpiry": "2026-03-31",
+    "violations12m": 1
+   },
+   {
+    "id": "TR-09",
+    "name": "ناقل 09",
+    "licenses": [
+     "general"
+    ],
+    "licenseExpiry": "2025-12-31",
+    "violations12m": 4
+   },
+   {
+    "id": "TR-11",
+    "name": "ناقل 11",
+    "licenses": [
+     "general"
+    ],
+    "licenseExpiry": "2025-07-15",
+    "violations12m": 2
+   }
+  ],
+  "geofences": [
+   {
+    "id": "Z-S02",
+    "type": "approved_site",
+    "name": "مردم صناعي S-02"
+   },
+   {
+    "id": "Z-FUEL-01",
+    "type": "fuel_station",
+    "name": "محطة وقود الطريق الدائري"
+   },
+   {
+    "id": "Z-HOT-03",
+    "type": "dumping_hotspot",
+    "name": "أرض فضاء خلف الطريق الدائري"
+   },
+   {
+    "id": "Z-FC2207",
+    "type": "facility",
+    "name": "محيط FC-2207"
+   }
+  ],
+  "drone": [
+   {
+    "id": "DO-0519-07",
+    "time": "2025-05-19 10:20",
+    "lat": 26.2455,
+    "lon": 50.0055,
+    "label": "drums",
+    "areaM2": 14,
+    "confidence": 0.86
+   },
+   {
+    "id": "DO-0519-08",
+    "time": "2025-05-19 10:24",
+    "lat": 26.2447,
+    "lon": 50.006,
+    "label": "liquid_stain",
+    "areaM2": 22,
+    "confidence": 0.71
+   },
+   {
+    "id": "DO-0512-02",
+    "time": "2025-05-12 09:05",
+    "lat": 26.242,
+    "lon": 49.95,
+    "label": "old_dump",
+    "areaM2": 160,
+    "confidence": 0.92
+   }
+  ],
+  "generation": [
+   {
+    "facility": "FC-2207",
+    "month": "2025-03-01",
+    "class": "Hazardous",
+    "declared": 0,
+    "productionIndex": 98,
+    "expected": 6.2
+   },
+   {
+    "facility": "FC-2207",
+    "month": "2025-04-01",
+    "class": "Hazardous",
+    "declared": 0,
+    "productionIndex": 101,
+    "expected": 6.4
+   },
+   {
+    "facility": "FC-2207",
+    "month": "2025-05-01",
+    "class": "Hazardous",
+    "declared": 0,
+    "productionIndex": 104,
+    "expected": 6.8
+   },
+   {
+    "facility": "FC-2207",
+    "month": "2025-05-01",
+    "class": "General",
+    "declared": 6.5,
+    "productionIndex": 104,
+    "expected": 1.5
+   },
+   {
+    "facility": "FC-2260",
+    "month": "2025-05-01",
+    "class": "Hazardous",
+    "declared": 0,
+    "productionIndex": 95,
+    "expected": 9.5
+   },
+   {
+    "facility": "FC-2260",
+    "month": "2025-05-01",
+    "class": "Industrial",
+    "declared": 10,
+    "productionIndex": 95,
+    "expected": 2
+   }
+  ],
+  "cases": [
+   {
+    "id": "CS-0518-01",
+    "trip": "T-5523",
+    "score": 195,
+    "rank": 1,
+    "predicted": "Hazardous",
+    "confidence": 0.91,
+    "action": "زيارة فورية للموقع والمنشأة وسحب عينة",
+    "review": false
+   },
+   {
+    "id": "CS-0518-02",
+    "trip": "T-5529",
+    "score": 165,
+    "rank": 2,
+    "predicted": "Hazardous",
+    "confidence": 0.65,
+    "action": "مطابقة الوثيقة مع مخزون الناقل",
+    "review": true
+   },
+   {
+    "id": "CS-0518-03",
+    "trip": "T-5526",
+    "score": 157.5,
+    "rank": 3,
+    "predicted": "Hazardous",
+    "confidence": 0.58,
+    "action": "التحقق من المركبة والمادة",
+    "review": true
+   },
+   {
+    "id": "CS-0518-04",
+    "trip": "T-5522",
+    "score": 75,
+    "rank": 4,
+    "predicted": "Hazardous",
+    "confidence": 0.97,
+    "action": "مراجعة التصنيف مع المنشأة",
+    "review": false
+   },
+   {
+    "id": "CS-0518-05",
+    "trip": "T-5525",
+    "score": 37.5,
+    "rank": 5,
+    "predicted": "Hazardous",
+    "confidence": 0.88,
+    "action": "التحقق من الموقع المسلّم إليه",
+    "review": false
+   }
+  ],
+  "weights": {
+   "فرق الوزن": 30,
+   "تصنيف معلن أقل خطورة من المتوقع": 30,
+   "الموقع لا يقبل الفئة / لا موقع معتمد": 25,
+   "مركبة غير مرخصة للخطرة": 25,
+   "توقف طويل خارج النطاقات": 20,
+   "انقطاع التتبع": 15,
+   "انحراف عن المسار": 10,
+   "توقف في مكان رمي معروف / رصد درون": 30
+  },
+  "thresholds": {
+   "حد التصنيف كخطرة (احتمال ≥)": 0.3,
+   "حد الثقة العالية (لا مراجعة بشرية ≥)": 0.7,
+   "سماح فرق الوزن (%)": 0.03,
+   "سماح فرق الوزن (طن)": 0.3,
+   "توقف خارج النطاقات المعتمدة (دقيقة ≥)": 15,
+   "انقطاع إشارة التتبع (دقيقة ≥)": 10,
+   "انحراف عن المسار المتوقع (% ≥)": 0.3,
+   "مضاعف المواد الخطرة": 1.5,
+   "حد اعتبار الرحلة مشبوهة (نقاط ≥)": 25,
+   "عدد الحالات المعروضة للمفتشين": 10
+  },
+  "recommendations": [
+   "1) زيارة فورية لموقع توقف V-107 (حيث رصد الدرون براميل) وللمنشأة FC-2207 لتصحيح تصنيف الزيوت المستعملة.",
+   "2) مطابقة وثيقة T-5522 مع مخزون البطاريات لدى الناقل TR-04، والتحقق من 2.9 طن مفقودة.",
+   "3) إيقاف تكليف المركبات غير المرخصة (V-107، V-108، V-110، V-118) بأي شحنة يرجّح النموذج أنها خطرة.",
+   "4) تحديث الإعلان لدى FC-2260 وFC-2245: عبوات الدهان والخبث نفايات خطرة."
+  ]
+ }
+}
