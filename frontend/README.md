@@ -121,20 +121,36 @@ python scripts/build_map_style.py    # basemap style -> src/components/maps/styl
 
 Responses are cached in `scripts/.cache` (git-ignored), so a re-run is quick.
 
-## Hero image
+## Hero image and the link preview
 
-`public/hero-wide.png` (2160 × 1080, 2:1) and `public/hero-tall.png` (1080 × 2160,
-1:2) are the same picture in two shapes, with an SVG twin of each: the name and
-tagline over a ring of six industries (plastics, metals, heat, water, paper,
-oils) passing their waste through the recycle mark. No page uses them yet; they
-are for a landing page, a social card or a slide. Everything is vector, with the
-text outlined, so the SVGs render the same anywhere.
+One picture in three shapes, each with an SVG twin: the name and tagline over a
+ring of six industries (plastics, metals, heat, water, paper, oils) passing
+their waste through the recycle mark. Everything is vector, with the text
+outlined, so the SVGs render the same anywhere.
+
+| File | Size | For |
+| --- | --- | --- |
+| `public/og-image.jpg` | 1200 × 630, about 115 KB | The card shown when the link is shared on WhatsApp, LinkedIn or X |
+| `public/hero-wide.png` | 2160 × 1080 (2:1) | A banner or a slide; no page uses it yet |
+| `public/hero-tall.png` | 1080 × 2160 (1:2) | A story or a phone wallpaper; no page uses it yet |
+
+**The link preview** is the `og:` and `twitter:` tags in `index.html`. Chat apps
+read that file without running the app, so the tags live there and the image
+URL has to be absolute: change `https://refact.khalid-ai.dev` in `index.html`
+if the domain changes. The preview is a JPEG of about 115 KB on purpose:
+WhatsApp drops preview images over roughly 300 KB (the PNG of the same picture
+is 400 KB), and `build_hero.py --jpeg` refuses to write one that big. WhatsApp
+also remembers a link's preview for a long time, so after a deploy share the
+link with something new on the end (`https://refact.khalid-ai.dev/?v=2`) to
+see the new card.
 
 ```bash
-pip install uharfbuzz fonttools
+pip install uharfbuzz fonttools pillow
 python scripts/build_hero.py
 npx -y @resvg/resvg-js-cli --fit-width 2160 public/hero-wide.svg public/hero-wide.png
 npx -y @resvg/resvg-js-cli --fit-width 1080 public/hero-tall.svg public/hero-tall.png
+npx -y @resvg/resvg-js-cli --fit-width 1200 public/og-image.svg scripts/.cache/og-image.png
+python scripts/build_hero.py --jpeg       # scripts/.cache/og-image.png -> public/og-image.jpg
 ```
 
 ## Stack

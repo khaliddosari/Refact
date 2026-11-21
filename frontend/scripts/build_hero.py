@@ -1,9 +1,15 @@
 """
 Build the hero artwork for ريفاكت: the brand over a ring of exchanging
-factories, in two shapes of the same picture.
+factories, in three shapes of the same picture.
 
   public/hero-wide.svg   2160 x 1080 (2:1), the brand on the right, the ring on the left
   public/hero-tall.svg   1080 x 2160 (1:2), the brand on top, the ring below
+  public/og-image.svg    2160 x 1134, drawn to be rasterised at 1200 x 630: the picture
+                         a link preview shows (WhatsApp, LinkedIn, X). A phone shows it
+                         about 350 px wide, so the name is bigger and the ring smaller.
+                         The site serves it as public/og-image.jpg (see --jpeg below):
+                         WhatsApp drops preview images over about 300 KB, and the PNG
+                         of this picture is 400 KB, the JPEG about 110 KB.
 
 The picture says what the platform does: six industries (plastics, metals,
 heat, water, paper, oils) pass their waste to the hub in the middle, which
@@ -17,6 +23,9 @@ Arabic joins properly), so the SVG renders the same anywhere. For the PNGs:
     python scripts/build_hero.py [path/to/thmanyahsans-Bold.otf]
     npx -y @resvg/resvg-js-cli --fit-width 2160 public/hero-wide.svg public/hero-wide.png
     npx -y @resvg/resvg-js-cli --fit-width 1080 public/hero-tall.svg public/hero-tall.png
+    npx -y @resvg/resvg-js-cli --fit-width 1200 public/og-image.svg scripts/.cache/og-image.png
+    pip install pillow
+    python scripts/build_hero.py --jpeg       # scripts/.cache/og-image.png -> public/og-image.jpg
 
 Without a font path it downloads Thmanyah Sans Bold from the pinned
 thmanyah-fonts tag. The brand lockup comes from src/components/brand/logo-art.ts.
@@ -40,6 +49,9 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 LOGO_ART = ROOT / "src" / "components" / "brand" / "logo-art.ts"
 PUBLIC = ROOT / "public"
+OG_PNG = HERE / ".cache" / "og-image.png"  # the rasterised picture, git-ignored
+OG_JPG = PUBLIC / "og-image.jpg"
+OG_MAX_KB = 300  # WhatsApp drops preview images larger than about this
 
 FONT_URL = (
     "https://cdn.jsdelivr.net/gh/khaliddosari/thmanyah-fonts@v1/"
@@ -224,16 +236,22 @@ def brand(font: Path, anchor_x: float, top: float, lockup_w: float, align: str, 
     return "\n".join(out)
 
 
-def scene(width: int, height: int, tall: bool, font: Path) -> str:
+def scene(width: int, height: int, kind: str, font: Path) -> str:
+    """`kind` is 'wide', 'tall' or 'og' (the link-preview picture)."""
+    tall = kind == "tall"
     if tall:
         centre = (width / 2, height * 0.64)
         radius, node_r = width * 0.35, 70.0
         art = brand(font, width / 2, height * 0.14, width * 0.72, "middle", 54)
+    elif kind == "og":
+        centre = (width * 0.26, height / 2)
+        radius, node_r = height * 0.34, 66.0
+        art = brand(font, width - 150, height * 0.5 - 165, 980, "end", 66)
     else:
         centre = (width * 0.285, height / 2)
         radius, node_r = height * 0.355, 68.0
         art = brand(font, width - 170, height * 0.5 - 150, 800, "end", 58)
-    glow_x, glow_y = (width * 0.72, height * 0.28) if not tall else (width * 0.5, height * 0.2)
+    glow_x, glow_y = (width * 0.5, height * 0.2) if tall else (width * 0.72, height * 0.28)
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
 <defs>
 <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -255,16 +273,39 @@ def scene(width: int, height: int, tall: bool, font: Path) -> str:
 """
 
 
+def og_jpeg() -> None:
+    """The rasterised preview picture as the JPEG the site serves, checked against WhatsApp's size limit."""
+    from PIL import Image  # pip install pillow
+
+    im = Image.open(OG_PNG).convert("RGB")
+    if im.size != (1200, 630):
+        sys.exit(f"{OG_PNG} is {im.size[0]} x {im.size[1]}: rasterise og-image.svg with --fit-width 1200")
+    # Baseline, full-resolution colour: crisp text on the dark ground, and every crawler reads it.
+    im.save(OG_JPG, "JPEG", quality=90, subsampling=0, optimize=True)
+    kb = OG_JPG.stat().st_size / 1024
+    print(f"wrote {OG_JPG} ({kb:.0f} KB)")
+    if kb > OG_MAX_KB:
+        sys.exit(f"over {OG_MAX_KB} KB: WhatsApp drops preview images that big; lower the quality")
+
+
 def main() -> None:
-    if len(sys.argv) > 1:
-        font = Path(sys.argv[1])
+    if "--jpeg" in sys.argv:
+        og_jpeg()
+        return
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    if args:
+        font = Path(args[0])
     else:
         font = Path(tempfile.gettempdir()) / "thmanyahsans-Bold.otf"
         if not font.exists():
             urllib.request.urlretrieve(FONT_URL, font)
-    for name, w, h, tall in (("hero-wide", 2160, 1080, False), ("hero-tall", 1080, 2160, True)):
+    for name, w, h, kind in (
+        ("hero-wide", 2160, 1080, "wide"),
+        ("hero-tall", 1080, 2160, "tall"),
+        ("og-image", 2160, 1134, "og"),
+    ):
         out = PUBLIC / f"{name}.svg"
-        out.write_text(scene(w, h, tall, font), encoding="utf-8")
+        out.write_text(scene(w, h, kind, font), encoding="utf-8")
         print(f"wrote {out} ({out.stat().st_size / 1024:.0f} KB)")
 
 

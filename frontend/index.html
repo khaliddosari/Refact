@@ -17,13 +17,28 @@
       name="description"
       content="ريفاكت منصة للتكافل الصناعي الاستباقي: وكلاء أذكياء يربطون مخلفات المصانع باحتياجات مصانع أخرى داخل المدن الصناعية، قبل أن تضيع فرص إعادة الاستخدام."
     />
+    <!--
+      The card WhatsApp, LinkedIn and X show when the link is shared. Their
+      crawlers read this file without running the app, so the tags live here,
+      and the image has to be an absolute URL: change the domain below if the
+      site moves. The image is 1200 x 630 and about 115 KB because WhatsApp
+      drops preview images over roughly 300 KB (scripts/build_hero.py makes it).
+    -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ar_SA" />
+    <meta property="og:site_name" content="ريفاكت" />
+    <meta property="og:url" content="https://refact.khalid-ai.dev/" />
     <meta property="og:title" content="ريفاكت · منصة التكافل الصناعي الاستباقي" />
     <meta
       property="og:description"
       content="وكلاء أذكياء يربطون مخلفات المصانع باحتياجات مصانع أخرى داخل المدن الصناعية."
     />
+    <meta property="og:image" content="https://refact.khalid-ai.dev/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ريفاكت: منصة التكافل الصناعي الاستباقي" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <div id="root"></div>
