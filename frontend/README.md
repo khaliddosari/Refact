@@ -23,12 +23,66 @@ npm run dev
 Open http://localhost:5173. To check a production build, run `npm run build`
 and then `npm run preview`. Nothing needs a key or a `.env` file.
 
+## The tabs
+
+The header has three tabs. Written right to left, as they appear: **لوحة
+التحكم** (`/dashboard`), **الوكلاء** (`/`, in the middle, and the landing page)
+and **التتبع** (`/tracking`, at the left). The order is `NAV_ITEMS` in
+`src/lib/nav.ts`, in reading order: the first item is at the right.
+
+**الوكلاء** has one card per agent. Each card has its status, three numbers, and
+the four best findings (three on a phone):
+
+| Card | Data | Numbers | Findings |
+| --- | --- | --- | --- |
+| وكيل المشتريات | 06 | Feasible opportunities of those considered, monthly savings, tonnes kept out of landfill | The top exchanges: material, from and to which factory, value |
+| وكيل التصنيف | 07 | Records, how many are riskier than declared, how many need a human review | The records the agent worries about most: declared class to predicted class, confidence |
+| وكيل التتبع | 07 | Trips, suspicious ones, the highest risk score | The riskiest trips: id, the main reason, score |
+
+**لوحة التحكم** (06 + 07) has four numbers (monthly savings, landfill
+diversion, CO₂ avoided, suspicious trips, each with a bar of what it is made of),
+the chart below, and two short lists the chart does not hold: the top
+opportunities and the riskiest trips.
+
+**التتبع** (07) draws the trips on the roads between facilities and approved
+sites (with geofences), the recorded GPS track snapped to the roads with
+playback, and the drone sightings. Selecting a trip lights its route and bubble,
+outlines its facility and its site's geofence in dotted red, and dims the rest.
+The chart's risk view links here with the trip selected (`/tracking?trip=T-5523`).
+
+### The chart
+
+`src/components/impact-chart.tsx`. Ranked horizontal bars, one measure at a time
+(a bar's length is the only thing it says, so every bar is one colour): the
+monthly saving, the waste kept out of landfill or the CO₂ avoided by each
+opportunity the agents found, or the risk score of each suspicious trip. Hover,
+focus or tap a bar and the strip under the chart reads out everything about it,
+the other measures included, and fades the other bars. The table button swaps
+the bars for the same figures as a table. Plain HTML, no chart library: bars grow
+from the start edge (the right) so there is no direction to fix.
+
+## Nothing scrolls on a desktop
+
+From the `desk` variant (window at least 80rem wide and 40rem tall) the page is
+exactly the window: `AppShell` is `h-dvh overflow-hidden`, a page fills what the
+header and footer leave, and its cards share that height. Below it (a phone, a
+tablet, a short window) pages scroll as normal pages do.
+
+- `desk`, `desk-short` and `desk-tight` are custom variants in `src/index.css`;
+  `below-desk` is their opposite. Tailwind's `not-desk:` does not work on a
+  custom variant (it emits a rule that never applies), so use `below-desk:`.
+- A list that must not scroll uses `desk:fit-rows` (a utility in `index.css`).
+  Rows that do not fit wrap into a second column the box clips, so a row is
+  never cut in half, and no JavaScript measures anything. Rows that only make
+  sense on a taller screen are hidden below desk with `below-desk:hidden`.
+- A locked column needs `min-h-0` on every flex or grid parent down to the list;
+  without it the content's height wins and the window scrolls again.
+
 ## Maps
 
-The two map screens (التتبع, a tab, and الترسيات, a hidden page at `/awards`;
-the الوكلاء and لوحة التحكم tabs show no map) draw OpenStreetMap, restyled to
-look like Google Maps: beige land, pale grey built-up areas, white streets with
-a blue-grey edge, slate-blue motorways, Arabic labels.
+The one map screen (التتبع) draws OpenStreetMap, restyled to look like Google
+Maps: beige land, pale grey built-up areas, white streets with a blue-grey edge,
+slate-blue motorways, Arabic labels.
 
 - **Basemap.** OpenStreetMap vector tiles from [OpenFreeMap](https://openfreemap.org)
   (free, no key), drawn by MapLibre GL through `@vis.gl/react-maplibre`. The
@@ -37,12 +91,10 @@ a blue-grey edge, slate-blue motorways, Arabic labels.
   (`scripts/map-source/liberty.json`) with a Google-like palette, no POI icons
   and Arabic-first labels. The map needs the internet at run time for tiles and
   fonts. Keep the attribution line on the map: the data licences require it.
-- **Routes follow real roads.** Every road line (an exchange between two
-  factories that goes by truck, a trip's expected leg from its facility to its
-  site, the recorded GPS track) is a driving route from the public OSRM server,
-  worked out once by `scripts/build_map_data.py` and stored in
-  `src/data/map-data.json`, so the app calls no routing service. Heat and
-  treated water go by pipe, so those exchanges are straight lines.
+- **Routes follow real roads.** A trip's expected leg from its facility to its
+  site, and the recorded GPS track, are driving routes from the public OSRM
+  server, worked out once by `scripts/build_map_data.py` and stored in
+  `src/data/map-data.json`, so the app calls no routing service.
 - **GPS track.** The nine fixes are snapped to the road chain with the least
   road distance between neighbours (a Viterbi pass over OSRM's nearest and table
   services). A leg whose road route is over 2.2 times the straight line between
@@ -50,17 +102,17 @@ a blue-grey edge, slate-blue motorways, Arabic labels.
   sighting) is drawn straight.
 - **The Google route look.** A selected route gets a dark casing, orange and red
   traffic stretches, white dots at the turns, direction chevrons and the blue
-  bubble with the time and distance. A selected factory gets the dotted red
-  outline, as does the site of a selected trip (its geofence). The outline is
-  the block of roads the factory stands in, or a rectangle square to the
-  nearest road where the roads do not close round it.
+  bubble with the time and distance. A selected trip gets the dotted red outline
+  on its facility and on its site (its geofence). The outline is the block of
+  roads the place stands in, or a rectangle square to the nearest road where the
+  roads do not close round it.
 - **Traffic is illustrative.** The data pack has no traffic source, so the
   orange and red stretches are chosen per route by a seeded generator, on its
   faster roads only, and their delay is added to the time. The same route
   always gets the same traffic. Times and distances are the road's, so they
   differ from the straight-line distance in the data pack.
 
-To rebuild what the maps draw (needs the internet and `pip install shapely`):
+To rebuild what the map draws (needs the internet and `pip install shapely`):
 
 ```bash
 python scripts/build_map_data.py     # routes, GPS track, outlines -> src/data/map-data.json
@@ -68,6 +120,22 @@ python scripts/build_map_style.py    # basemap style -> src/components/maps/styl
 ```
 
 Responses are cached in `scripts/.cache` (git-ignored), so a re-run is quick.
+
+## Hero image
+
+`public/hero-wide.png` (2160 × 1080, 2:1) and `public/hero-tall.png` (1080 × 2160,
+1:2) are the same picture in two shapes, with an SVG twin of each: the name and
+tagline over a ring of six industries (plastics, metals, heat, water, paper,
+oils) passing their waste through the recycle mark. No page uses them yet; they
+are for a landing page, a social card or a slide. Everything is vector, with the
+text outlined, so the SVGs render the same anywhere.
+
+```bash
+pip install uharfbuzz fonttools
+python scripts/build_hero.py
+npx -y @resvg/resvg-js-cli --fit-width 2160 public/hero-wide.svg public/hero-wide.png
+npx -y @resvg/resvg-js-cli --fit-width 1080 public/hero-tall.svg public/hero-tall.png
+```
 
 ## Stack
 
@@ -79,59 +147,26 @@ with `"rtl": true`), React Router, lucide icons, MapLibre GL with
 
 | Path | What it holds |
 | --- | --- |
-| `src/lib/nav.ts` | Every page (`PAGES`: path, label, icon) and which of them are header tabs (`NAV_ITEMS`) |
-| `src/lib/agents.ts` | The three agents (name, goal, icon, status), shared by the الوكلاء tab and the dashboard so the names cannot drift |
+| `src/lib/nav.ts` | Every page (`PAGES`: path, label, icon) and which of them are header tabs, in order (`NAV_ITEMS`) |
+| `src/lib/agents.ts` | The three agents' name, goal, icon and status, which the الوكلاء tab adds figures to |
 | `src/lib/site.ts` | Team members (footer), the signed-in user, the locale |
 | `src/lib/format.ts` | Number, date and unit formatting, and Arabic labels for every code in the data |
 | `src/lib/roads.ts` | Path geometry (distance, point along a path, turn points, circles) and playing a recorded GPS track back along its snapped road |
 | `src/lib/polyline.ts` | Decoder for the encoded polylines in `map-data.json` |
 | `src/lib/map-colors.ts` | The route palette and theme colours as hex, for the map canvas (CSS variables do not resolve there) |
-| `src/router.tsx` | One route per page, tab or not; the two map screens load on demand |
-| `src/data/` | `refact-data.json` (generated), its types, and lookups; `map-data.json` (generated) and `map.ts` for the map screens |
+| `src/router.tsx` | One route per page; التتبع loads on demand because MapLibre is large |
+| `src/data/` | `refact-data.json` (generated), its types, and lookups; `map-data.json` (generated) and `map.ts` for the map screen |
 | `scripts/build_data.py` | Rebuilds `refact-data.json` from the challenge zip (see below) |
-| `scripts/build_map_data.py`, `scripts/build_map_style.py` | Rebuild what the maps draw (see Maps) |
-| `src/pages/` | One file per page (three are tabs, four are hidden; see The tabs) |
-| `src/components/maps/` | The map view, route and area layers, pins and bubble, and the two screens' maps (`symbiosis-map`, `tracking-map`); `style.json` is the basemap |
+| `scripts/build_map_data.py`, `scripts/build_map_style.py` | Rebuild what the map draws (see Maps) |
+| `scripts/build_hero.py` | Rebuilds the hero SVGs (see Hero image) |
+| `src/pages/` | One file per page: `agents`, `dashboard`, `tracking`, and the not-found page |
+| `src/components/impact-chart.tsx` | The dashboard chart (see The chart) |
+| `src/components/maps/` | The map view, route and area layers, pins and bubble, and the tracking map; `style.json` is the basemap |
 | `src/components/layout/` | Header, tabs, footer, page shell |
 | `src/components/brand/` | The logo, its generated artwork (`logo-art.ts`), the LinkedIn glyph |
 | `scripts/build_logo.py` | Rebuilds `logo-art.ts` from Thmanyah Serif Display (see below) |
-| `src/index.css` | The theme (palette, glass surfaces, fonts) after the CLI-generated block |
+| `src/index.css` | The theme (palette, glass surfaces, fonts, the `desk` variants) after the CLI-generated block |
 | `public/fonts/` | Thmanyah Sans (400, 500, 700), the interface font |
-
-## The tabs
-
-The header has three tabs: **الوكلاء** (`/`), **لوحة التحكم** (`/dashboard`) and
-**التتبع** (`/tracking`).
-
-**الوكلاء** has one card per agent. Each card has its status, three numbers, and
-the four best findings (three on a phone):
-
-| Card | Data | Numbers | Findings |
-| --- | --- | --- | --- |
-| وكيل المشتريات | 06 | Feasible opportunities of those considered, monthly savings, tonnes kept out of landfill | The top exchanges: material, from and to which factory, value |
-| وكيل التصنيف | 07 | Records, how many are riskier than declared, how many need a human review | The records the agent worries about most: declared class to predicted class, confidence |
-| وكيل التتبع | 07 | Trips, suspicious ones, the highest risk score | The riskiest trips: id, the main reason, score |
-
-The other two tabs:
-
-| Path | Tab | Data | What it shows |
-| --- | --- | --- | --- |
-| `/dashboard` | لوحة التحكم | 06 + 07 | Savings, landfill diversion, CO₂ and suspicious trips, top opportunities, riskiest cases, the three agents and one recommendation traced end to end |
-| `/tracking` | التتبع | 07 | Trips on the roads between facilities and approved sites (with geofences), the recorded GPS track snapped to the roads with playback, drone sightings. Selecting a trip lights its route and bubble, outlines its facility and its site's geofence in dotted red, and dims the rest |
-
-## The four hidden tabs
-
-The first version had six tabs; لوحة التحكم and التتبع are back. The other four
-are commented out of `NAV_ITEMS` in `src/lib/nav.ts`, not deleted: every page
-and route still works, and a tab comes back when its line is uncommented. With
-a single tab the phone bar is not drawn. The pages are reachable by path:
-
-| Path | Page | Data | What it shows |
-| --- | --- | --- | --- |
-| `/tenders` | المناقصات | 06 | Waste offers and material requests as the factories wrote them, the agent's classification (material, EWC, declared or inferred), and every match it considered |
-| `/awards` | الترسيات | 06 | Opportunities ranked by impact, rejected pairs and why, and a map of the exchanges along real roads. Factories are coloured by segment (supplier, receiver, both); selecting an exchange names and pulses its two factories, outlines them in dotted red, lights its route (casing, traffic, chevrons, a bubble with time and distance), and dims the rest |
-| `/inventory` | مخزوني | 07 | Declared waste records against the agent's predicted class and confidence, and disclosure gaps |
-| `/operations` | عملياتي | 07 | The ranked inspection list with reasons as chips, and every trip |
 
 ## The data
 
@@ -173,22 +208,33 @@ There is no key to bake in. A custom domain is attached in `wrangler.jsonc`
   glass for the header and footer.
 - UI text uses Thmanyah Sans. It has no 600 weight, so use `font-medium` or
   `font-bold`, not `font-semibold`.
+- Titles (`h1`-`h4`, card and empty-state titles) switch on every optional
+  OpenType feature the font ships (the swash and stylistic forms, discretionary
+  ligatures, fractions); body text and numbers keep the plain letterforms. The
+  rule is in `src/index.css`. It leaves out `aalt`, which turns ر into a stub.
+  The swash forms run wider than the plain ones, so a title that must stay on
+  one line needs room for them (the chart title does, and its unit gives way
+  first). Put plain letters back inside a title with `[font-feature-settings:normal]`.
 - The logo (ريفاكت) is Thmanyah Serif Display Black with every optional
-  OpenType feature on, converted to outlines so the lockup is flush on every
-  side: the mark is exactly as tall as the name's ink. To rebuild it after
-  changing the script's proportions:
+  OpenType feature on except `aalt`, converted to outlines so the lockup is
+  flush on every side: the mark is exactly as tall as the name's ink. `aalt`
+  ("all alternates") swaps the letter ر for its stub form, which reads as a
+  broken letter, so it stays off. To rebuild it after changing the script's
+  proportions:
 
   ```bash
   pip install uharfbuzz fonttools
   python scripts/build_logo.py
   ```
-- Phones (below `md`): when there is more than one tab they move to a fixed
-  bottom bar (`components/layout/mobile-tab-bar.tsx`) with short labels from
-  `short` in `lib/nav.ts`; with one tab there is no bar. The agent cards stack
-  in one column and switch to three side by side from `lg`. التتبع shows the
-  map first with a swipeable trip row; in the hidden الترسيات page the list and
-  the map take turns below `lg`. Tables become lists below `sm`, and every
-  control is at least 40px tall.
+- Phones (below `md`): the tabs move to a fixed bottom bar
+  (`components/layout/mobile-tab-bar.tsx`) with short labels from `short` in
+  `lib/nav.ts`; with a single tab there would be no bar. The header then holds
+  only the logo, which is centred, and the footer keeps the three team names on
+  one line (the type scales with the screen, and below 360px the LinkedIn marks
+  are dropped to make room). The agent cards stack
+  in one column and switch to three side by side from `lg`. التتبع shows the map
+  first with a swipeable trip row. The chart's table fits the card at 360px.
+  Every control is at least 40px tall.
 - A grid of cards needs `grid-cols-1` (a `minmax(0, 1fr)` track), not the
   implicit auto track: an auto track grows to the widest unbreakable line in a
   card and overflows a phone.

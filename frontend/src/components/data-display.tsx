@@ -14,10 +14,9 @@ import {
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
 import { cityName, cityShort, cityTiny } from "@/data"
-import type { Family, Trip, WasteClass } from "@/data/types"
-import { CLASS_LABEL, FAMILY_ICON, FAMILY_LABEL, fmt, fmtPct } from "@/lib/format"
+import type { Trip, WasteClass } from "@/data/types"
+import { CLASS_LABEL, fmt, fmtPct } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
 const SEGMENT_FILLS = ["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"]
@@ -66,60 +65,6 @@ export function ClassBadge({ cls, className }: { cls: WasteClass; className?: st
     <Badge variant="outline" className={cn("h-6 border-primary/20 bg-card px-2 text-xs text-foreground/80", className)}>
       {CLASS_LABEL[cls]}
     </Badge>
-  )
-}
-
-export function FamilyIcon({ family, className }: { family: Family; className?: string }) {
-  const Icon = FAMILY_ICON[family]
-  return (
-    <span
-      title={FAMILY_LABEL[family]}
-      className={cn("grid size-10 shrink-0 place-items-center rounded-xl bg-secondary text-primary ring-1 ring-primary/10", className)}
-    >
-      <Icon aria-hidden="true" className="size-[1.15rem]" />
-    </span>
-  )
-}
-
-/**
- * A number with its label: the summary row at the top of a page. `short` is
- * the phone form of the label (three of these share a 360px row).
- */
-export function MiniStat({
-  icon: Icon,
-  label,
-  short,
-  value,
-  unit,
-  tone = "default",
-}: {
-  icon: LucideIcon
-  label: string
-  short?: string
-  value: string
-  unit?: string
-  tone?: "default" | "alert"
-}) {
-  return (
-    <Card className="gap-1.5 p-3 sm:p-4" title={label}>
-      <p className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground sm:gap-2">
-        <Icon aria-hidden="true" className={cn("size-4 shrink-0", tone === "alert" ? "text-red-700" : "text-primary")} />
-        {short ? (
-          <>
-            <span className="truncate sm:hidden">{short}</span>
-            <span className="hidden truncate sm:inline">{label}</span>
-          </>
-        ) : (
-          <span className="truncate">{label}</span>
-        )}
-      </p>
-      <p className="flex flex-wrap items-baseline gap-x-1.5">
-        <span className={cn("text-2xl leading-none font-bold tabular-nums", tone === "alert" ? "text-red-800" : "text-primary")}>
-          {value}
-        </span>
-        {unit && <span className="text-sm font-medium text-muted-foreground">{unit}</span>}
-      </p>
-    </Card>
   )
 }
 

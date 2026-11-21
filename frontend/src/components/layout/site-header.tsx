@@ -11,14 +11,15 @@ import { CURRENT_USER } from "@/lib/site"
  * Three equal-share columns keep the tabs centred on the page rather than in
  * the space left over. Below lg the tabs drop to their own row, and the
  * header stops being sticky: pinning two rows of a phone screen to show a
- * logo is a bad trade.
+ * logo is a bad trade. On a phone the logo is the only thing in the bar (the
+ * tabs are at the bottom), so it sits in the middle of it.
  */
 export function SiteHeader() {
   return (
     <header className="relative z-40 px-3 pt-3 sm:px-4 lg:sticky lg:top-0 lg:pt-4 desk:static desk:shrink-0 desk:pt-3">
       <div className="mx-auto max-w-[112rem] rounded-2xl bg-forest text-forest-foreground shadow-(--forest-shadow) ring-1 ring-(--forest-edge) backdrop-blur-xl backdrop-saturate-150">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2.5 px-3 py-2.5 sm:px-4 lg:grid-cols-[1fr_auto_1fr]">
-          <Logo className="justify-self-start" />
+        <div className="grid grid-cols-1 items-center gap-x-4 gap-y-2.5 px-3 py-2.5 sm:px-4 md:grid-cols-[minmax(0,1fr)_auto] lg:grid-cols-[1fr_auto_1fr]">
+          <Logo className="justify-self-center md:justify-self-start" />
           {/* Phones get the tabs in the bottom bar instead (MobileTabBar). */}
           <SiteNav className="order-last col-span-2 max-md:hidden lg:order-none lg:col-span-1" />
           <UserBadge />
@@ -29,9 +30,8 @@ export function SiteHeader() {
 }
 
 /**
- * Who is signed in (the team the agents' results are addressed to, and who
- * "my" means in the hidden مخزوني and عملياتي pages). Information, not a menu.
- * From xl only: below that a full set of six tabs needs the row. It fills its
+ * Who is signed in: the team the agents' results are addressed to. Information,
+ * not a menu. From xl only, so the tabs keep the row below that. It fills its
  * column and truncates, so it can never spill into the tabs.
  */
 function UserBadge() {

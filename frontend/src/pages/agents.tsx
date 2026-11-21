@@ -9,14 +9,13 @@ import {
   COMP,
   MAX_TRIP_SCORE,
   SYM,
-  byproductById,
   facilityLabel,
   feasibleOpportunities,
-  materialByCode,
+  materialOf,
   partyName,
   suspiciousTrips,
 } from "@/data"
-import type { Opportunity, WasteRecord } from "@/data/types"
+import type { WasteRecord } from "@/data/types"
 import { AGENT_INFO, type AgentInfo } from "@/lib/agents"
 import { fmt, fmtInt, fmtPct } from "@/lib/format"
 import { PAGES } from "@/lib/nav"
@@ -197,7 +196,7 @@ function AgentCard({ agent }: { agent: Agent }) {
               className={cn(
                 "flex items-center gap-3 py-2.5 desk:py-2",
                 i === 3 && "max-lg:hidden",
-                i > 3 && "not-desk:hidden"
+                i > 3 && "below-desk:hidden"
               )}
             >
               <span

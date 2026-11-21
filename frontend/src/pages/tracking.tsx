@@ -76,7 +76,7 @@ export default function TrackingPage() {
 
       {/* grid-cols-1 is minmax(0, 1fr): without it the phone column grows to
           the trip list's longest line and the map runs off the screen. */}
-      <div className="grid flex-1 grid-cols-1 gap-4 lg:min-h-[34rem] lg:grid-cols-[18rem_minmax(0,1fr)]">
+      <div className="grid flex-1 grid-cols-1 gap-4 lg:min-h-[34rem] lg:grid-cols-[18rem_minmax(0,1fr)] desk:min-h-0 desk:grid-rows-[minmax(0,1fr)] desk:gap-3">
         {/* Phone: the trips are a swipeable row above the map; lg: a side list. */}
         <TripChips selectedId={selected.id} onSelect={select} />
         <section
@@ -157,7 +157,13 @@ export default function TrackingPage() {
                     className="h-10 gap-1.5 rounded-xl px-3 lg:h-9"
                   >
                     {playing ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-                    {playing ? "إيقاف" : "تشغيل المسار"}
+                    {playing ? (
+                      "إيقاف"
+                    ) : (
+                      <>
+                        تشغيل<span className="max-sm:hidden"> المسار</span>
+                      </>
+                    )}
                   </Button>
                   <Button
                     type="button"
@@ -172,7 +178,7 @@ export default function TrackingPage() {
                   >
                     <RotateCcw aria-hidden="true" />
                   </Button>
-                  <span className="ms-auto flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <span className="ms-auto flex shrink-0 items-center gap-1.5 text-xs whitespace-nowrap text-muted-foreground">
                     <Gauge aria-hidden="true" className="size-3.5 text-primary" />
                     {at.still ? "متوقفة" : `${fmtInt(at.speed)} كم/س`}
                   </span>

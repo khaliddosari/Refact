@@ -11,8 +11,8 @@ export type AgentInfo = {
 }
 
 /**
- * The three agents, defined once so the الوكلاء tab and the dashboard always
- * call them the same thing, with the same icon and status.
+ * The three agents: name, goal, icon and status. The الوكلاء tab adds the
+ * figures; the words and the icon live here so a rename touches one file.
  */
 export const AGENT_INFO = {
   procurement: {

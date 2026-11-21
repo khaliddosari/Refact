@@ -10,14 +10,14 @@ const [, , VIEW_W, VIEW_H] = LOGO_VIEWBOX.split(" ").map(Number)
  * The lockup: the light green recycle mark on the left, ريفاكت beside it.
  *
  * It is outlined artwork (logo-art.ts, built by scripts/build_logo.py from
- * Thmanyah Serif Display with every OpenType feature on), measured from the
+ * Thmanyah Serif Display with every OpenType feature on except aalt), measured from the
  * glyph ink so it is flush on every side: the mark is exactly as tall as the
  * name's ink, and the SVG's edges are the ink's edges, so whatever centres the
  * logo centres the ink.
  *
  * The name is a long word next to a mark of the same height, so the lockup is
  * wide (about 5:1). The heights step down at lg, where the tabs and the logo
- * share one row (a full set of six needs the room), and up again at xl.
+ * share one row, and up again at xl.
  *
  * The mark turns a third of a revolution on hover; the loop has threefold
  * symmetry, so it comes to rest exactly where it started.

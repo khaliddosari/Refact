@@ -80,7 +80,7 @@ export default function DashboardPage() {
         <Panel title="أعلى الفرص" aside={<CityTag city={SYM.city} />} className="desk:min-h-0" bodyClassName="py-1 sm:py-1 desk:min-h-0 desk:py-0">
           <ol className="divide-y divide-primary/10 desk:min-h-0 desk:flex-1 desk:fit-rows">
             {feasibleOpportunities.map((o, i) => (
-              <OpportunityRow key={o.id} opportunity={o} className={i >= 5 ? "not-desk:hidden" : undefined} />
+              <OpportunityRow key={o.id} opportunity={o} className={i >= 5 ? "below-desk:hidden" : undefined} />
             ))}
           </ol>
         </Panel>
@@ -88,7 +88,7 @@ export default function DashboardPage() {
         <Panel title="أخطر الرحلات" aside={<CityTag city={COMP.city} />} className="desk:min-h-0" bodyClassName="py-1 sm:py-1 desk:min-h-0 desk:py-0">
           <ol className="divide-y divide-primary/10 desk:min-h-0 desk:flex-1 desk:fit-rows">
             {suspiciousTrips.map((t, i) => (
-              <TripRow key={t.id} trip={t} className={i >= 3 ? "not-desk:hidden" : undefined} />
+              <TripRow key={t.id} trip={t} className={i >= 3 ? "below-desk:hidden" : undefined} />
             ))}
           </ol>
         </Panel>

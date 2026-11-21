@@ -196,6 +196,18 @@
   --text-lg--line-height: 1.5;
 }
 
+/* Titles get every optional OpenType feature Thmanyah Sans ships: the swash and
+   stylistic forms, discretionary ligatures, fractions (ss03-ss07 only change
+   the fatha). Body text, numbers and data keep the plain letterforms so they
+   stay easy to scan. aalt is left out on purpose: it is a menu of alternates,
+   not a style, and it turns ر into a broken stub (see scripts/build_logo.py).
+   The swash forms run wider, so a title that must not wrap needs the room. */
+h1, h2, h3, h4,
+[data-slot="card-title"],
+[data-slot="empty-title"] {
+  font-feature-settings: "ss01", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "salt", "swsh", "dlig", "frac";
+}
+
 /* Console breakpoints (from the house style): from desk the page is exactly
    the window and nothing scrolls. They test height as well as width, because a
    wide but short laptop window cannot hold two rows of panels. */
@@ -211,6 +223,13 @@
 }
 @custom-variant desk-tight {
   @media (min-width: 80rem) and (min-height: 40rem) and (max-height: 47rem) {
+    @slot;
+  }
+}
+/* Everything that is not desk (Tailwind's not-* does not work on a custom
+   variant: it emits a rule that never applies). */
+@custom-variant below-desk {
+  @media (max-width: 79.999rem), (max-height: 39.999rem) {
     @slot;
   }
 }
